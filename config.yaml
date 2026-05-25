@@ -1,0 +1,88 @@
+# ============================================================
+# AI Digest — 配置文件。改这里即可，无需动代码。
+# ============================================================
+
+# 只保留发布时间在这个窗口内的条目（小时）。
+# 每天跑一次给一点冗余，30 小时能覆盖偶尔的运行延迟。
+lookback_hours: 30
+
+# ---- YouTube 频道（用频道 ID，免费 RSS） ----
+# 频道 ID 解析方法见 README。
+youtube:
+  - name: "Andrej Karpathy"
+    channel_id: "UCYO_jab_esuFRV4b17AJtAw"
+  - name: "Two Minute Papers"
+    channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
+  - name: "Yannic Kilcher"
+    channel_id: "UCHmD-oSpV0sNfAUnpYpj8KA"
+  - name: "AI Explained"
+    channel_id: "UCNJ1Ymd5yFuUPtn21xtRbbw"
+  - name: "ML Street Talk"
+    channel_id: "UCZHmQk67mSJgfCCTn7xBfew"
+  - name: "Lex Fridman"
+    channel_id: "UCJIfeSCssxSC_Dhc5s7woww"
+
+# ---- 新闻 / Newsletter / 博客（RSS / Atom） ----
+rss:
+  - name: "Import AI (Jack Clark)"
+    url: "https://importai.substack.com/feed"
+  - name: "Ahead of AI (Sebastian Raschka)"
+    url: "https://magazine.sebastianraschka.com/feed"
+  - name: "Simon Willison"
+    url: "https://simonwillison.net/atom/everything/"
+  - name: "The Verge AI"
+    url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
+  - name: "Ars Technica AI"
+    url: "https://arstechnica.com/ai/feed/"
+  - name: "MIT Tech Review AI"
+    url: "https://www.technologyreview.com/topic/artificial-intelligence/feed"
+
+# ---- Tavily 网页新闻搜索（补固定 RSS 之外的大新闻；需要 TAVILY_API_KEY） ----
+tavily:
+  enabled: true
+  days: 3                # 只取近 N 天的新闻，避免捞回旧文
+  max_results: 5         # 每条查询取几条
+  queries:
+    - "new large language model release OpenAI Anthropic Google DeepMind"
+    - "AI research breakthrough new paper"
+    - "AI safety alignment regulation policy"
+    - "open source AI model tool launch"
+  # 想盯的 X / 行业人物——Tavily 搜他们近期的相关报道与言论（不是原始推文）
+  people:
+    - "Andrej Karpathy"
+    - "Sam Altman"
+    - "Demis Hassabis"
+    - "Yann LeCun"
+    - "Dario Amodei"
+    - "Andrew Ng"
+  people_max_results: 3   # 每个人物取几条
+
+# ---- 预过滤（在调用 AI 之前，省额度。留空=不过滤） ----
+filters:
+  blocked_keywords: []        # 标题含这些词就丢弃
+  required_keywords: []       # 非空时，标题必须含其中之一
+
+# ---- AI 富化（Gemini Flash，免费） ----
+ai:
+  enabled: true
+  model: "gemini-2.0-flash"
+  rate_limit_seconds: 7       # 每次调用间隔
+  batch_size: 5               # 每次调用处理几条
+  min_score: 0                # 低于此分的条目不进简报（0=全留）
+  # 你关心的方向，AI 据此打分
+  priorities:
+    - "大模型能力突破、新模型发布、重要 benchmark"
+    - "知名研究者/实验室的观点与新作"
+    - "AI 安全、对齐、监管的重要进展"
+    - "有实操价值的工程方法、工具、开源项目"
+
+# ---- 简报与邮件 ----
+digest:
+  subject_prefix: "AI 速览"
+  top_n: 8                    # 置顶“今日重点”取前几条
+  write_overview: true        # 是否让 AI 写一段当日总览
+
+mail:
+  smtp_host: "smtp.qq.com"
+  smtp_port: 465              # QQ: 465(SSL)
+  # 发件人、授权码、收件人走环境变量(见 .env.example)，不写在这里
