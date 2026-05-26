@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from ai import digest as digest_mod
+from ai.quality import apply_quality_gate
 from deliver import email as mailer
 from deliver import site as site_builder
 from sources import tavily
@@ -123,7 +124,19 @@ def main() -> None:
         intro = digest_mod.overview(enriched, cfg)
     else:
         print("[AI] 未设置 GEMINI_API_KEY，跳过富化，直接列原始条目")
-        enriched = [{**it, "ai_score": 50, "ai_summary": it.get("summary", "")[:200], "ai_topic": "其它"} for it in deduped]
+        enriched = [
+            apply_quality_gate(
+                {
+                    **it,
+                    "ai_score": 50,
+                    "ai_summary": it.get("summary", "")[:200],
+                    "ai_reason": "未启用 AI 富化",
+                    "ai_topic": "其它",
+                },
+                cfg,
+            )
+            for it in deduped
+        ]
         intro = ""
 
     markdown_body = digest_mod.build_markdown(enriched, cfg, intro=intro)

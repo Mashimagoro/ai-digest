@@ -77,6 +77,64 @@ ai:
     - "AI 安全、对齐、监管的重要进展"
     - "有实操价值的工程方法、工具、开源项目"
 
+# ---- 信源权重与自动质检 ----
+# 这些规则会同时影响 AI 打分提示词和最终分数封顶。
+source_quality:
+  official_domains:
+    - "openai.com"
+    - "anthropic.com"
+    - "blog.google"
+    - "deepmind.google"
+    - "googleblog.com"
+    - "microsoft.com"
+    - "mistral.ai"
+    - "huggingface.co"
+    - "github.blog"
+  high_confidence_domains:
+    - "techmeme.com"
+    - "theverge.com"
+    - "technologyreview.com"
+    - "arstechnica.com"
+    - "techcrunch.com"
+    - "theregister.com"
+    - "venturebeat.com"
+    - "simonwillison.net"
+    - "axios.com"
+    - "politico.com"
+    - "reuters.com"
+    - "apnews.com"
+    - "bloomberg.com"
+    - "cnbc.com"
+    - "businessinsider.com"
+    - "washingtonpost.com"
+    - "nytimes.com"
+    - "ft.com"
+    - "wsj.com"
+    - "wired.com"
+    - "nature.com"
+    - "science.org"
+  research_domains:
+    - "arxiv.org"
+    - "openreview.net"
+    - "papers.ssrn.com"
+  low_confidence_domains:
+    - "mlq.ai"
+    - "yahoo.com"
+    - "huffpost.com"
+    - "nypost.com"
+    - "geeky-gadgets.com"
+    - "letsdatascience.com"
+    - "thesunchronicle.com"
+    - "economictimes.indiatimes.com"
+  score_caps:
+    official: 100
+    high: 96
+    normal: 89
+    low: 79
+
+quality_gates:
+  enabled: true               # 低置信来源不能靠夸张标题冲到 90+
+
 # ---- 简报与邮件 ----
 digest:
   subject_prefix: "AI 速览"

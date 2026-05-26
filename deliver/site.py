@@ -38,17 +38,33 @@ def _card(it: dict, compact: bool = False) -> str:
     title = html.escape(it.get("title", ""))
     url = html.escape(it.get("url", ""), quote=True)
     source = html.escape(it.get("source", ""))
+    domain = html.escape(it.get("source_domain", ""))
+    tier = html.escape(it.get("source_tier_label", ""))
+    credibility = html.escape(it.get("ai_credibility") or it.get("source_credibility", ""))
     topic = html.escape(it.get("ai_topic", "其它"))
     summary = html.escape(it.get("ai_summary", ""))
+    reason = html.escape(it.get("ai_reason", ""))
+    qa_notes = [html.escape(str(note)) for note in it.get("qa_notes", []) or []]
+    quality_chips = ""
+    if tier:
+        quality_chips += f'\n    <span class="chip chip--quality">{tier}</span>'
+    if credibility:
+        quality_chips += f'\n    <span class="chip chip--cred">可信度：{credibility}</span>'
+    if domain:
+        quality_chips += f'\n    <span class="chip chip--domain">{domain}</span>'
+    reason_html = f'\n  <p class="reason"><strong>为什么重要：</strong>{reason}</p>' if reason else ""
+    qa_html = ""
+    if qa_notes:
+        qa_html = f'\n  <p class="qa"><strong>质检：</strong>{"；".join(qa_notes)}</p>'
     cls = "card card--compact" if compact else "card"
     return f"""<article class="{cls}">
   <div class="meta">
     <span class="badge {_score_class(score)}">{score}</span>
     <span class="chip chip--src">{source}</span>
-    <span class="chip chip--topic">{topic}</span>
+    <span class="chip chip--topic">{topic}</span>{quality_chips}
   </div>
   <h3 class="title"><a href="{url}" target="_blank" rel="noopener">{title}</a></h3>
-  <p class="summary">{summary}</p>
+  <p class="summary">{summary}</p>{reason_html}{qa_html}
 </article>"""
 
 
@@ -179,12 +195,18 @@ section:first-child h2{margin-top:0}
 .s-high{background:var(--accent)}.s-mid{background:#0ea5a0}.s-ok{background:#c08a2d}.s-low{background:#a3a3ac}
 .chip{font-size:.74rem;padding:1px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
 .chip--topic{background:#f4f3f0}
+.chip--quality{background:#eef9f6;color:#0b766f;border-color:#cbeee8}
+.chip--cred{background:#fff8e8;color:#8a5a05;border-color:#f1dfb2}
+.chip--domain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .title{font-size:1.06rem;font-weight:700;margin:.1em 0 .35em;line-height:1.4}
 .card--compact .title{font-size:.98rem}
 .title a{color:var(--ink);text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
   background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .2s}
 .title a:hover{background-size:100% 2px;color:var(--accent)}
 .summary{margin:0;color:#333}
+.reason,.qa{margin:.45em 0 0;color:var(--muted);font-size:.88rem}
+.reason strong,.qa strong{color:#444}
+.qa{border-left:3px solid #f1dfb2;padding-left:10px}
 .topic-h{font-size:.82rem;font-weight:700;color:var(--muted);margin:1.4em 0 .2em;
   text-transform:uppercase;letter-spacing:.06em}
 .history{position:sticky;top:20px;background:var(--surface);border:1px solid var(--line);

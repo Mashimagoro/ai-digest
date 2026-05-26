@@ -5,6 +5,7 @@ import json
 from datetime import datetime, timezone
 
 from ai.client import generate
+from ai.quality import apply_quality_gate, classify_source
 
 
 def _chunks(items: list[dict], size: int):
@@ -30,12 +31,12 @@ def analyse(items: list[dict], cfg: dict) -> list[dict]:
     out: list[dict] = []
     for idx, group in enumerate(batches, 1):
         print(f"  [AI] 第 {idx}/{len(batches)} 批…")
-        result = generate(_prompt(group, priorities), model=model, rate_limit=rate)
+        result = generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate)
         analyses = result.get("analyses", [])
         # 空返回或条数不足时重试一次（应对偶发 429/截断）
         if len(analyses) < len(group):
             print(f"  [AI] 第 {idx} 批返回不全（{len(analyses)}/{len(group)}），重试…")
-            retry = generate(_prompt(group, priorities), model=model, rate_limit=rate).get("analyses", [])
+            retry = generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate).get("analyses", [])
             if len(retry) > len(analyses):
                 analyses = retry
         for j, item in enumerate(group):
@@ -45,23 +46,26 @@ def analyse(items: list[dict], cfg: dict) -> list[dict]:
                 print(f"  [AI] 跳过未富化条目: {item.get('title', '')[:40]}")
                 continue
             score = max(0, min(100, int(a.get("score", 0))))
-            if min_score and score < min_score:
-                continue
-            out.append(
+            enriched = apply_quality_gate(
                 {
                     **item,
                     "ai_score": score,
                     "ai_summary": a.get("summary", ""),
+                    "ai_reason": a.get("reason", ""),
+                    "ai_credibility": a.get("credibility", ""),
                     "ai_topic": a.get("topic", "其它"),
-                }
+                },
+                cfg,
             )
+            if min_score and enriched.get("ai_score", 0) < min_score:
+                continue
+            out.append(enriched)
     return out
 
 
-def _prompt(group: list[dict], priorities: list[str]) -> str:
+def _prompt(group: list[dict], priorities: list[str], cfg: dict) -> str:
     items_text = "\n\n".join(
-        f"条目 {i + 1}:\n标题: {it.get('title', '')}\n来源: {it.get('source', '')}\n"
-        f"摘要: {it.get('summary', '')[:600]}"
+        _prompt_item(i, it, cfg)
         for i, it in enumerate(group)
     )
     prio = "\n".join(f"- {p}" for p in priorities) or "- AI 领域的重要进展"
@@ -73,13 +77,31 @@ def _prompt(group: list[dict], priorities: list[str]) -> str:
 # 用户关心的方向（据此打重要性分）
 {prio}
 
+# 信源和质检规则
+- 官方博客、研究原文、主流媒体、知名技术博客可给更高可信度。
+- 聚合站、转载站、营销站、来源不清的网站即使标题很大，也不要轻易给 90 分以上。
+- 90+ 分必须是必看的大新闻/突破，且需要有一手/主流/研究原文支撑。
+- 如果来源偏弱但事件可能重要，降低 score，并在 credibility 写“待核”。
+
 # 要求
 - summary：用简体中文写 1-2 句话，说清楚这条讲了什么、为什么值得看。不要复述标题。
 - score：0-100 的重要性分。90+=必看的大新闻/突破，70-89=值得看，50-69=一般，<50=边角料。
+- reason：用 12-28 个中文字解释评分理由，例如“影响搜索入口和信息分发”。
+- credibility：从 高 / 中 / 待核 中选一个，表示信源可信度与核验状态。
 - topic：从中选一个简短主题标签：模型发布 / 研究论文 / 行业动态 / 工具开源 / 安全监管 / 观点访谈 / 其它。
 
 严格按条目顺序返回：
-{{"analyses": [{{"score": <int>, "summary": "<中文>", "topic": "<标签>"}}, ...]}}"""
+{{"analyses": [{{"score": <int>, "summary": "<中文>", "reason": "<中文>", "credibility": "高|中|待核", "topic": "<标签>"}}, ...]}}"""
+
+
+def _prompt_item(i: int, it: dict, cfg: dict) -> str:
+    source_quality = classify_source(it, cfg)
+    return (
+        f"条目 {i + 1}:\n标题: {it.get('title', '')}\n来源: {it.get('source', '')}\n"
+        f"域名: {source_quality.get('source_domain', '')}\n"
+        f"信源等级: {source_quality.get('source_tier_label', '')}\n"
+        f"摘要: {it.get('summary', '')[:600]}"
+    )
 
 
 def dedupe_stories(items: list[dict], cfg: dict) -> list[dict]:
@@ -193,6 +215,16 @@ def _render_item(it: dict, compact: bool = False) -> str:
     url = it.get("url", "")
     source = it.get("source", "")
     summary = it.get("ai_summary", "")
+    reason = it.get("ai_reason", "")
+    credibility = it.get("ai_credibility") or it.get("source_credibility", "")
+    qa_notes = it.get("qa_notes", [])
+    extra = ""
+    if reason:
+        extra += f"  \n  为什么重要：{reason}"
+    if credibility:
+        extra += f"  \n  可信度：{credibility}"
+    if qa_notes:
+        extra += f"  \n  质检：{'；'.join(qa_notes)}"
     if compact:
-        return f"- **[{title}]({url})** · {source} `{score}`  \n  {summary}"
-    return f"### [{title}]({url})\n\n`重要性 {score}` · {source}\n\n{summary}\n"
+        return f"- **[{title}]({url})** · {source} `{score}`  \n  {summary}{extra}"
+    return f"### [{title}]({url})\n\n`重要性 {score}` · {source}\n\n{summary}{extra}\n"
