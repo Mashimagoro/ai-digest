@@ -54,7 +54,7 @@ def fetch_feed(url: str, source: str) -> list[dict]:
         items.append(
             {
                 "id": entry.get("id", link),
-                "title": _strip_html(entry.get("title", "") or ""),
+                "title": _clean_title(entry.get("title", "") or ""),
                 "url": link,
                 "source": source,
                 "published": published.isoformat() if published else "",
@@ -73,3 +73,14 @@ def _strip_html(text: str) -> str:
     text = html.unescape(text)
     text = re.sub(r"\s+", " ", text)
     return text.strip()
+
+
+def _clean_title(text: str) -> str:
+    """标题清洗：解码 HTML 实体并合并空白，但**不删尖括号**。
+
+    标题里像 "On the <dl>" 的 <dl> 是文章名的一部分，按 HTML 标签删掉会把标题截断。
+    """
+    import html
+    import re
+
+    return re.sub(r"\s+", " ", html.unescape(text)).strip()

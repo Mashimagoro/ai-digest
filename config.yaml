@@ -59,7 +59,8 @@ tavily:
 
 # ---- 预过滤（在调用 AI 之前，省额度。留空=不过滤） ----
 filters:
-  blocked_keywords: []        # 标题含这些词就丢弃
+  # 标题含这些词就丢弃（公关稿/聚合简报噪音）
+  blocked_keywords: ["crypto", "trading bot", "tech brief", "price prediction"]
   required_keywords: []       # 非空时，标题必须含其中之一
 
 # ---- AI 富化（Gemini Flash，免费） ----
@@ -68,7 +69,7 @@ ai:
   model: "gemini-2.0-flash"
   rate_limit_seconds: 7       # 每次调用间隔
   batch_size: 5               # 每次调用处理几条
-  min_score: 0                # 低于此分的条目不进简报（0=全留）
+  min_score: 55               # 低于此分的条目不进简报（过滤低信号水文）
   # 你关心的方向，AI 据此打分
   priorities:
     - "大模型能力突破、新模型发布、重要 benchmark"

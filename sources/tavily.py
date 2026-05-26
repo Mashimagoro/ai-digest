@@ -6,7 +6,9 @@
 """
 from __future__ import annotations
 
+import html
 import os
+import re
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
 
@@ -60,7 +62,7 @@ def _search(key: str, query: str, max_results: int, days: int, source: str) -> l
         out.append(
             {
                 "id": url,
-                "title": (r.get("title") or "").strip(),
+                "title": re.sub(r"\s+", " ", html.unescape(r.get("title") or "")).strip(),
                 "url": url,
                 "source": source,
                 "published": dt.isoformat() if dt else "",

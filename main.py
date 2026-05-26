@@ -119,6 +119,7 @@ def main() -> None:
 
     if os.environ.get("GEMINI_API_KEY"):
         enriched = digest_mod.analyse(deduped, cfg)
+        enriched = digest_mod.dedupe_stories(enriched, cfg)
         intro = digest_mod.overview(enriched, cfg)
     else:
         print("[AI] 未设置 GEMINI_API_KEY，跳过富化，直接列原始条目")

@@ -32,23 +32,29 @@ def analyse(items: list[dict], cfg: dict) -> list[dict]:
         print(f"  [AI] 第 {idx}/{len(batches)} 批…")
         result = generate(_prompt(group, priorities), model=model, rate_limit=rate)
         analyses = result.get("analyses", [])
+        # 空返回或条数不足时重试一次（应对偶发 429/截断）
+        if len(analyses) < len(group):
+            print(f"  [AI] 第 {idx} 批返回不全（{len(analyses)}/{len(group)}），重试…")
+            retry = generate(_prompt(group, priorities), model=model, rate_limit=rate).get("analyses", [])
+            if len(retry) > len(analyses):
+                analyses = retry
         for j, item in enumerate(group):
             a = analyses[j] if j < len(analyses) else {}
-            if a:
-                score = max(0, min(100, int(a.get("score", 0))))
-                if min_score and score < min_score:
-                    continue
-                out.append(
-                    {
-                        **item,
-                        "ai_score": score,
-                        "ai_summary": a.get("summary", ""),
-                        "ai_topic": a.get("topic", "其它"),
-                    }
-                )
-            else:
-                # AI 没给结果也别丢，给个中性分
-                out.append({**item, "ai_score": 50, "ai_summary": item.get("summary", "")[:200], "ai_topic": "其它"})
+            if not a:
+                # 拿不到 AI 结果就不收进简报，避免英文残摘要 / 绕过 min_score
+                print(f"  [AI] 跳过未富化条目: {item.get('title', '')[:40]}")
+                continue
+            score = max(0, min(100, int(a.get("score", 0))))
+            if min_score and score < min_score:
+                continue
+            out.append(
+                {
+                    **item,
+                    "ai_score": score,
+                    "ai_summary": a.get("summary", ""),
+                    "ai_topic": a.get("topic", "其它"),
+                }
+            )
     return out
 
 
@@ -74,6 +80,43 @@ def _prompt(group: list[dict], priorities: list[str]) -> str:
 
 严格按条目顺序返回：
 {{"analyses": [{{"score": <int>, "summary": "<中文>", "topic": "<标签>"}}, ...]}}"""
+
+
+def dedupe_stories(items: list[dict], cfg: dict) -> list[dict]:
+    """让 AI 找出报道同一件事的重复条目，每组只保留分数最高的一条。
+
+    只按「同一具体事件」合并，不按「同一主题」。AI 不可用或条目过少时原样返回。
+    """
+    if not cfg.get("ai", {}).get("enabled", True) or len(items) < 2:
+        return items
+
+    listing = "\n".join(
+        f"{i + 1}. [{it.get('source', '')}] {it.get('title', '')}"
+        for i, it in enumerate(items)
+    )
+    result = generate(
+        f"""下面是今天的 AI 资讯条目。找出报道**同一件事/同一具体事件**的重复条目并分组。
+注意：是「同一事件的不同报道」才算重复，仅仅「同一主题」不算。
+
+{listing}
+
+返回 JSON: {{"groups": [[同一事件的条目编号(1基), ...], ...]}}。
+不确定就不要分组；独立事件无需列出。""",
+        model=cfg.get("ai", {}).get("model", "gemini-2.0-flash"),
+        rate_limit=cfg.get("ai", {}).get("rate_limit_seconds", 7.0),
+    )
+
+    drop: set[int] = set()
+    for group in result.get("groups", []) or []:
+        idxs = [i - 1 for i in group if isinstance(i, int) and 1 <= i <= len(items)]
+        if len(idxs) < 2:
+            continue
+        keep = max(idxs, key=lambda k: items[k].get("ai_score", 0))
+        drop.update(k for k in idxs if k != keep)
+
+    if drop:
+        print(f"  [去重] 合并同一事件，丢弃 {len(drop)} 条重复")
+    return [it for i, it in enumerate(items) if i not in drop]
 
 
 def overview(items: list[dict], cfg: dict) -> str:
