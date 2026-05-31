@@ -153,7 +153,10 @@ def main() -> None:
     site_builder.build(enriched, cfg, intro, today)
 
     if os.environ.get("SMTP_USER"):
-        mailer.send(subject, markdown_body, cfg)
+        try:
+            mailer.send(subject, markdown_body, cfg)
+        except Exception as exc:
+            print(f"[mail] 发送失败，继续保存站点和 seen 状态: {exc}", file=sys.stderr)
     else:
         print("[mail] 未设置 SMTP_USER，仅生成本地简报，不发信。")
 
