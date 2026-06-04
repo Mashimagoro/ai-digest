@@ -1,0 +1,27 @@
+name: Door Monitor Email
+
+on:
+  schedule:
+    - cron: "0 17 * * *"   # 北京时间每天 01:00
+  workflow_dispatch:
+
+jobs:
+  door-monitor-email:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - run: pip install -r requirements.txt
+
+      - name: Send door monitor summary
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASS: ${{ secrets.SMTP_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+        run: python door_monitor_email.py
