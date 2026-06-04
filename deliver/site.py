@@ -63,16 +63,7 @@ def _card(it: dict, compact: bool = False) -> str:
     if qa_notes:
         qa_html = f'\n  <p class="qa"><strong>质检：</strong>{"；".join(qa_notes)}</p>'
     cls = "card card--compact" if compact else "card"
-    band = "high" if score >= 85 else "mid" if score >= 70 else "watch"
-    tier_raw = it.get("source_tier", "")
-    cred_raw = it.get("ai_credibility") or it.get("source_credibility", "")
-    if tier_raw == "official":
-        conf = "official"
-    elif tier_raw == "high" or cred_raw == "高":
-        conf = "verified"
-    else:
-        conf = "pending"
-    return f"""<article class="{cls}" data-band="{band}" data-conf="{conf}">
+    return f"""<article class="{cls}">
   <div class="card-head">
     <div class="meta">
       {chip_html}
@@ -144,7 +135,7 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
         links = "".join(
             f'<li><a href="{digest_href(d)}">{d}</a></li>' for d in history[:60]
         )
-        hist_html = f'<aside class="history" id="history"><h2>历史简报</h2><ol>{links}</ol></aside>'
+        hist_html = f'<aside class="history"><h2>历史简报</h2><ol>{links}</ol></aside>'
     title_text = html.escape(title)
     return f"""<!doctype html>
 <html lang="zh-CN">
@@ -158,31 +149,30 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
 <div class="stage">
   <header class="site-head">
     <div class="nav-pill">
-      <a class="nav-mark" href="#top">AI</a>
-      <a href="#top">本期</a>
-      <a href="#filters">筛选</a>
-      <a href="#history">历史</a>
+      <span class="nav-mark">AI</span>
+      <span>Digest</span>
+      <span>Signals</span>
+      <span>Sources</span>
+      <span>History</span>
     </div>
-    <div class="hero-panel hero-panel--left" id="filters">
-      <span>重要性筛选</span>
-      <button type="button" class="filt active" data-axis="band" data-value="">全部</button>
-      <button type="button" class="filt" data-axis="band" data-value="high">高影响</button>
-      <button type="button" class="filt" data-axis="band" data-value="mid">中影响</button>
-      <button type="button" class="filt" data-axis="band" data-value="watch">观察</button>
+    <div class="hero-panel hero-panel--left">
+      <span>Impact Levels</span>
+      <b>High Impact</b>
+      <b>Medium Impact</b>
+      <b>Watchlist</b>
     </div>
     <div class="hero-panel hero-panel--right">
-      <span>可信度筛选</span>
-      <button type="button" class="filt active" data-axis="conf" data-value="">全部</button>
-      <button type="button" class="filt" data-axis="conf" data-value="official">官方/一手</button>
-      <button type="button" class="filt" data-axis="conf" data-value="verified">高可信</button>
-      <button type="button" class="filt" data-axis="conf" data-value="pending">待核/普通</button>
+      <span>Confidence</span>
+      <b>Official</b>
+      <b>Verified</b>
+      <b>Pending</b>
     </div>
     <div class="beam" aria-hidden="true"></div>
     <p class="eyebrow">Daily AI Signal Brief</p>
     <h1 class="hero-title">AI INSIGHTS</h1>
     <p class="hero-subtitle">{title_text} · YouTube · 新闻 · Newsletter · 人物动态</p>
   </header>
-  <main id="top">
+  <main>
     {nav}
     <div class="layout">
       <div class="content">{body}</div>
@@ -191,37 +181,6 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
   </main>
 </div>
 <footer class="site-foot">由 AI Digest 自动生成 · 信源配置见仓库 config.yaml</footer>
-<script>
-(function(){{
-  var active={{band:"",conf:""}};
-  var cards=[].slice.call(document.querySelectorAll('.card'));
-  var heads=[].slice.call(document.querySelectorAll('section:not(.overview) > h2, .topic-h'));
-  function apply(){{
-    cards.forEach(function(c){{
-      var ok=(!active.band||c.dataset.band===active.band)&&(!active.conf||c.dataset.conf===active.conf);
-      c.style.display=ok?'':'none';
-    }});
-    heads.forEach(function(h){{
-      var n=h.nextElementSibling,any=false;
-      while(n&&n.tagName!=='H2'&&n.tagName!=='H3'){{
-        if(n.classList&&n.classList.contains('card')&&n.style.display!=='none'){{any=true;break;}}
-        n=n.nextElementSibling;
-      }}
-      h.style.display=any?'':'none';
-    }});
-  }}
-  document.querySelectorAll('.filt').forEach(function(b){{
-    b.addEventListener('click',function(){{
-      var ax=b.dataset.axis;
-      active[ax]=b.dataset.value;
-      document.querySelectorAll('.filt[data-axis="'+ax+'"]').forEach(function(x){{
-        x.classList.toggle('active',x.dataset.value===active[ax]);
-      }});
-      apply();
-    }});
-  }});
-}})();
-</script>
 </body>
 </html>"""
 
@@ -301,10 +260,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
 .nav-pill{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:8px;
   border:1px solid rgba(226,246,255,.22);border-radius:16px;background:rgba(12,20,35,.66);
   box-shadow:0 8px 36px rgba(0,0,0,.35),0 0 24px rgba(34,211,238,.12) inset;backdrop-filter:blur(18px)}
-.nav-pill span,.nav-pill a{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
-  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
-  text-decoration:none;transition:color .15s,border-color .15s}
-.nav-pill a:hover{color:var(--accent);border-color:var(--line-strong)}
+.nav-pill span{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
+  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
 .nav-pill .nav-mark{font-weight:900;color:#061018;background:linear-gradient(135deg,var(--accent),var(--signal));
   box-shadow:0 0 18px rgba(34,242,181,.3)}
 .eyebrow{position:relative;z-index:2;margin:86px 0 6px;color:var(--accent);font-size:.78rem;
@@ -317,13 +274,8 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
   border-radius:16px;background:rgba(6,13,28,.48);box-shadow:0 14px 38px rgba(0,0,0,.36),0 0 34px rgba(34,211,238,.1) inset;
   backdrop-filter:blur(16px);text-align:left;color:var(--muted)}
 .hero-panel span{display:block;margin-bottom:14px;color:#dff7ff;font-size:.76rem}
-.hero-panel .filt{display:block;width:100%;margin:7px 0;padding:6px 8px;border-radius:8px;
-  border:1px solid rgba(186,230,253,.16);color:#d8e6f7;font-size:.68rem;font-weight:600;
-  background:rgba(255,255,255,.035);text-align:left;cursor:pointer;font-family:inherit;
-  transition:border-color .15s,background .15s,color .15s}
-.hero-panel .filt:hover{border-color:var(--line-strong);color:#fff}
-.hero-panel .filt.active{border-color:var(--accent);color:#061018;
-  background:linear-gradient(135deg,var(--accent),var(--signal));font-weight:800}
+.hero-panel b{display:block;margin:7px 0;padding:6px 8px;border-radius:8px;border:1px solid rgba(186,230,253,.16);
+  color:#d8e6f7;font-size:.68rem;font-weight:600;background:rgba(255,255,255,.035)}
 .hero-panel--left{left:7%;top:295px}
 .hero-panel--right{right:7%;top:350px}
 main{max-width:var(--maxw);margin:0 auto;padding:34px 26px 64px}

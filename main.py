@@ -31,19 +31,17 @@ def load_config() -> dict:
     return yaml.safe_load((ROOT / "config.yaml").read_text(encoding="utf-8"))
 
 
-def load_seen() -> dict[str, None]:
-    # 用 dict（保留插入顺序）而非 set：裁剪时才能按时间序保留“最近见到的”id。
+def load_seen() -> set[str]:
     if SEEN_PATH.exists():
         try:
-            return dict.fromkeys(json.loads(SEEN_PATH.read_text()))
+            return set(json.loads(SEEN_PATH.read_text()))
         except (json.JSONDecodeError, OSError):
             pass
-    return {}
+    return set()
 
 
-def save_seen(seen: dict[str, None]) -> None:
+def save_seen(seen: set[str]) -> None:
     SEEN_PATH.parent.mkdir(parents=True, exist_ok=True)
-    # dict 有序，[-CAP:] 保留最近插入的 CAP 条，丢弃最老的（而非随机丢弃）。
     trimmed = list(seen)[-SEEN_CAP:]
     SEEN_PATH.write_text(json.dumps(trimmed, ensure_ascii=False, indent=0))
 
@@ -52,11 +50,11 @@ def collect(cfg: dict) -> list[dict]:
     items: list[dict] = []
     for ch in cfg.get("youtube", []):
         src = f"YouTube · {ch['name']}"
-        fetched = source_filter(fetch_feed(youtube_feed_url(ch["channel_id"]), src), ch)
+        fetched = fetch_feed(youtube_feed_url(ch["channel_id"]), src)
         print(f"[{src}] {len(fetched)} 条")
         items += fetched
     for feed in cfg.get("rss", []):
-        fetched = source_filter(fetch_feed(feed["url"], feed["name"]), feed)
+        fetched = fetch_feed(feed["url"], feed["name"])
         print(f"[{feed['name']}] {len(fetched)} 条")
         items += fetched
     tv = cfg.get("tavily", {})
@@ -72,33 +70,15 @@ def collect(cfg: dict) -> list[dict]:
     return items
 
 
-def _title_ok(title: str, block: list[str], require: list[str]) -> bool:
+def passes_filters(title: str, filters: dict) -> bool:
     low = title.lower()
-    if any(w.lower() in low for w in block):
+    blocked = [w.lower() for w in filters.get("blocked_keywords", [])]
+    if any(w in low for w in blocked):
         return False
-    if require and not any(w.lower() in low for w in require):
+    required = [w.lower() for w in filters.get("required_keywords", [])]
+    if required and not any(w in low for w in required):
         return False
     return True
-
-
-def passes_filters(title: str, filters: dict) -> bool:
-    return _title_ok(
-        title,
-        filters.get("blocked_keywords", []),
-        filters.get("required_keywords", []),
-    )
-
-
-def source_filter(items: list[dict], src_cfg: dict) -> list[dict]:
-    """源级关键词过滤：让“全量型”信源在本地就收口，不必把相关性全压给 AI。"""
-    block = src_cfg.get("block_keywords") or []
-    require = src_cfg.get("require_keywords") or []
-    if not block and not require:
-        return items
-    kept = [it for it in items if _title_ok(it.get("title", ""), block, require)]
-    if len(kept) != len(items):
-        print(f"    源级过滤: {len(items)} → {len(kept)} 条")
-    return kept
 
 
 def main() -> None:
@@ -134,14 +114,13 @@ def main() -> None:
         print("没有新内容，跳过发信。")
         # 仍然记录本次抓到的所有 id，避免历史条目某天突然进窗
         for it in raw:
-            seen[it["id"]] = None
+            seen.add(it["id"])
         save_seen(seen)
         return
 
     if os.environ.get("GEMINI_API_KEY"):
         enriched = digest_mod.analyse(deduped, cfg)
         enriched = digest_mod.dedupe_stories(enriched, cfg)
-        enriched = digest_mod.dedupe_similar(enriched)
         intro = digest_mod.overview(enriched, cfg)
     else:
         print("[AI] 未设置 GEMINI_API_KEY，跳过富化，直接列原始条目")
@@ -182,7 +161,7 @@ def main() -> None:
         print("[mail] 未设置 SMTP_USER，仅生成本地简报，不发信。")
 
     for it in raw:
-        seen[it["id"]] = None
+        seen.add(it["id"])
     save_seen(seen)
     print("完成。")
 
