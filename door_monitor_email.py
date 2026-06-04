@@ -22,17 +22,36 @@ def target_date() -> str:
     return (datetime.now(TZ).date() - timedelta(days=1)).isoformat()
 
 
-def load_stats(day: str) -> dict:
+def load_stats(day: str) -> tuple[dict | None, str | None]:
     if not STATS_PATH.exists():
-        raise RuntimeError("没有找到门口监控统计文件")
+        return None, None
     data = json.loads(STATS_PATH.read_text(encoding="utf-8"))
     days = data.get("days", {})
     if day not in days:
-        raise RuntimeError(f"没有找到 {day} 的门口监控统计")
-    return days[day]
+        latest = sorted(days)[-1] if days else None
+        return None, latest
+    return days[day], day
 
 
-def build_markdown(day: str, stats: dict) -> str:
+def build_markdown(day: str, stats: dict | None, latest_day: str | None = None) -> str:
+    if stats is None:
+        latest = f"最近一次统计是 {latest_day}。" if latest_day else "目前仓库里没有任何监控统计。"
+        return "\n".join(
+            [
+                f"# 门口监控备份 · {day}",
+                "",
+                "没有收到前一天的门口监控统计。",
+                "",
+                f"{latest}",
+                "",
+                "请检查家里这台电脑的监控录像、极空间同步，以及 00:50 的统计推送任务。",
+                "",
+                "---",
+                "",
+                "这封邮件只汇报监控备份状态，不更新 AI 资讯网页。",
+            ]
+        )
+
     stored = int(stats.get("stored") or 0)
     synced = int(stats.get("synced") or 0)
     local_present = int(stats.get("local_present") or 0)
@@ -62,9 +81,9 @@ def main() -> int:
     load_dotenv()
     cfg = load_config()
     day = target_date()
-    stats = load_stats(day)
+    stats, latest_day = load_stats(day)
     subject = f"门口监控备份 · {day}"
-    mailer.send(subject, build_markdown(day, stats), cfg)
+    mailer.send(subject, build_markdown(day, stats, latest_day), cfg)
     return 0
 
 

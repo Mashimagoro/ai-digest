@@ -6,58 +6,92 @@
 <title>AI 速览 · 2026-05-26</title>
 <style>
 :root{
-  --bg:#faf9f7; --surface:#ffffff; --ink:#1a1a1c; --muted:#6b6b73;
-  --accent:#4f46e5; --accent-soft:#eef0ff; --line:#e7e5e1;
-  --radius:14px; --shadow:0 1px 2px rgba(20,20,40,.04),0 8px 24px rgba(20,20,40,.06);
-  --maxw:980px;
+  --bg:#f6f8f5; --surface:rgba(255,255,255,.88); --ink:#14171a; --muted:#626a73;
+  --accent:#2563eb; --signal:#00a99d; --warm:#b87913; --accent-soft:#eaf2ff; --line:#dfe7e2;
+  --radius:10px; --shadow:0 1px 2px rgba(16,24,32,.04),0 14px 38px rgba(16,24,32,.08);
+  --maxw:1040px;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);
   font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
-  line-height:1.65;-webkit-font-smoothing:antialiased}
-.site-head{padding:34px 24px 26px;border-bottom:1px solid var(--line);background:var(--surface)}
-.site-head .brand{font-size:1.9rem;font-weight:800;letter-spacing:-.02em}
-.site-head .tag{color:var(--muted);font-size:.86rem;margin-top:4px}
+  line-height:1.65;-webkit-font-smoothing:antialiased;
+  background-image:
+    linear-gradient(rgba(37,99,235,.07) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,169,157,.06) 1px,transparent 1px);
+  background-size:34px 34px}
+.site-head{position:relative;overflow:hidden;padding:34px 24px 26px;border-bottom:1px solid var(--line);
+  background:linear-gradient(180deg,rgba(255,255,255,.96),rgba(248,251,249,.88))}
+.site-head::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:
+    repeating-linear-gradient(90deg,transparent 0 24px,rgba(37,99,235,.08) 24px 25px),
+    repeating-linear-gradient(0deg,transparent 0 24px,rgba(0,169,157,.06) 24px 25px);
+  mask-image:linear-gradient(90deg,#000,transparent 68%)}
+.site-head .brand{position:relative;font-size:1.9rem;font-weight:850;letter-spacing:0}
+.site-head .brand::before{content:"";display:inline-block;width:9px;height:9px;margin-right:10px;border-radius:50%;
+  background:var(--signal);box-shadow:0 0 0 5px rgba(0,169,157,.12),0 0 22px rgba(0,169,157,.45);vertical-align:middle}
+.site-head .tag{position:relative;color:var(--muted);font-size:.86rem;margin-top:4px}
 main{max-width:var(--maxw);margin:0 auto;padding:28px 24px 60px}
 .home{display:inline-block;color:var(--accent);text-decoration:none;font-size:.9rem;margin-bottom:8px}
 .home:hover{text-decoration:underline}
-.page-title{font-size:1.5rem;font-weight:800;letter-spacing:-.02em;margin:.2em 0 1em}
+.page-title{font-size:1.5rem;font-weight:850;letter-spacing:0;margin:.2em 0 1em}
 .layout{display:grid;grid-template-columns:1fr 220px;gap:34px;align-items:start}
 @media(max-width:760px){.layout{grid-template-columns:1fr}}
-h2{font-size:1.05rem;font-weight:800;color:var(--accent);margin:1.8em 0 .8em;
+h2{font-size:1.05rem;font-weight:850;color:var(--accent);margin:1.8em 0 .8em;
   text-transform:none;letter-spacing:.01em}
 section:first-child h2{margin-top:0}
-.overview{background:var(--accent-soft);border:1px solid #dfe2ff;border-radius:var(--radius);padding:6px 22px 14px}
+.overview{background:rgba(234,242,255,.86);border:1px solid #cfe0ff;border-radius:var(--radius);padding:6px 22px 14px;
+  box-shadow:inset 3px 0 0 var(--accent)}
+.overview--muted{background:#f4f3f0;border-color:var(--line)}
 .overview h2{color:var(--accent)}
 .overview ul{margin:0;padding-left:18px}
 .overview li{margin:6px 0;font-weight:600}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
-  padding:16px 18px;margin:12px 0;box-shadow:var(--shadow);transition:transform .15s ease,box-shadow .15s ease}
-.card:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(20,20,40,.06),0 16px 36px rgba(20,20,40,.10)}
+.overview p{margin:0;color:var(--muted)}
+.card{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+  padding:16px 18px;margin:12px 0;box-shadow:var(--shadow);backdrop-filter:blur(12px);
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.card::before{content:"";position:absolute;left:-1px;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--signal);opacity:.68}
+.card:hover{transform:translateY(-2px);border-color:#b9d7d2;box-shadow:0 4px 10px rgba(16,24,32,.08),0 18px 44px rgba(16,24,32,.12)}
 .card--compact{padding:11px 16px;box-shadow:none}
+.card--compact::before{top:12px;bottom:12px;background:#a5b4fc;opacity:.55}
 .card--compact .summary{font-size:.9rem;color:var(--muted)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:7px}
 .meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
-.badge{font-weight:800;font-size:.78rem;padding:1px 9px;border-radius:999px;color:#fff;min-width:30px;text-align:center}
-.s-high{background:var(--accent)}.s-mid{background:#0ea5a0}.s-ok{background:#c08a2d}.s-low{background:#a3a3ac}
-.chip{font-size:.74rem;padding:1px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted)}
-.chip--topic{background:#f4f3f0}
-.title{font-size:1.06rem;font-weight:700;margin:.1em 0 .35em;line-height:1.4}
-.card--compact .title{font-size:.98rem}
+.card-head .meta{margin-bottom:0}
+.badge{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:850;font-size:.78rem;
+  padding:1px 9px;border-radius:999px;color:#fff;min-width:30px;text-align:center}
+.s-high{background:var(--accent)}.s-mid{background:var(--signal)}.s-ok{background:var(--warm)}.s-low{background:#8f969d}
+.chip{font-size:.74rem;padding:1px 9px;border-radius:999px;border:1px solid var(--line);color:var(--muted);background:rgba(255,255,255,.66)}
+.chip--topic{background:#f2f5f2;color:#4b5563}
+.chip--quality{background:#e9f8f5;color:#087a72;border-color:#bde6df}
+.chip--domain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.title{font-size:1.06rem;font-weight:760;margin:.1em 0 .35em;line-height:1.4}
+.card--compact .title{font-size:.96rem;margin-bottom:.2em}
 .title a{color:var(--ink);text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
   background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .2s}
 .title a:hover{background-size:100% 2px;color:var(--accent)}
 .summary{margin:0;color:#333}
+.reason,.qa{margin:.45em 0 0;color:var(--muted);font-size:.88rem}
+.reason strong,.qa strong{color:#444}
+.qa{border-left:3px solid #f1dfb2;padding-left:10px;background:rgba(255,248,232,.52)}
 .topic-h{font-size:.82rem;font-weight:700;color:var(--muted);margin:1.4em 0 .2em;
-  text-transform:uppercase;letter-spacing:.06em}
+  text-transform:uppercase;letter-spacing:.08em}
 .history{position:sticky;top:20px;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--radius);padding:6px 18px 14px}
+  border-radius:var(--radius);padding:6px 18px 14px;backdrop-filter:blur(12px)}
 .history h2{font-size:.82rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
 .history ol{list-style:none;margin:0;padding:0}
 .history li{margin:4px 0}
-.history a{color:var(--ink);text-decoration:none;font-size:.9rem;font-variant-numeric:tabular-nums}
+.history a{color:var(--ink);text-decoration:none;font-size:.9rem;font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
 .history a:hover{color:var(--accent)}
 .site-foot{max-width:var(--maxw);margin:0 auto;padding:24px;color:var(--muted);
   font-size:.8rem;border-top:1px solid var(--line)}
+@media(max-width:520px){
+  main{padding:22px 16px 52px}
+  .site-head{padding:28px 16px 22px}
+  .card{padding:14px}
+  .card-head{display:block}
+  .badge{display:inline-block;margin-top:7px}
+}
 </style>
 </head>
 <body>
@@ -69,303 +103,74 @@ section:first-child h2{margin-top:0}
   <a class="home" href="../index.html">← 返回首页</a>
   <h1 class="page-title">AI 速览 · 2026-05-26</h1>
   <div class="layout">
-    <div class="content"><section class="overview"><h2>今日要点</h2><ul><li>DeepMind首席执行官预测通用人工智能（AGI）有望在2030年实现。</li><li>教皇呼吁对AI进行强有力监管，以应对其对人类未来的影响。</li><li>OpenAI在著名数学问题上取得突破，展示了AI在寻找反例方面的有效策略。</li></ul></section>
+    <div class="content"><section class="overview"><h2>今日要点</h2><ul><li>谷歌搜索入口继续 AI 化，可能改变信息分发方式。</li><li>Anthropic 模型开放和安全边界值得跟踪。</li><li>低置信来源已被自动降权并标记待核。</li></ul></section>
 <section><h2>重点条目</h2>
 <article class="card">
-  <div class="meta">
-    <span class="badge s-high">95</span>
-    <span class="chip chip--src">人物·Demis Hassabis (Tavily)</span>
-    <span class="chip chip--topic">观点访谈</span>
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">Google Blog</span>
+      <span class="chip chip--topic">模型发布</span>
+      <span class="chip chip--quality">官方/一手</span>
+    </div>
+    <span class="badge s-high">96</span>
   </div>
-  <h3 class="title"><a href="https://www.axios.com/2026/05/26/deepmind-ceo-demis-hassabis" target="_blank" rel="noopener">DeepMind CEO predicts AGI in 2030 - Axios</a></h3>
-  <p class="summary">Google DeepMind CEO Demis Hassabis预测通用人工智能（AGI）可能在2030年实现，并呼吁社会为这一“奇点”的到来做好准备，将当前AI代理视为AGI的预演。</p>
+  <h3 class="title"><a href="https://blog.google/products/search/" target="_blank" rel="noopener">Google debuts AI-first Search with Gemini 3.5 and always-on information agents</a></h3>
+  <p class="summary">谷歌把搜索体验进一步推向 AI 优先界面，围绕 Gemini 和代理式信息检索重塑入口。</p>
+  <p class="reason"><strong>为什么重要：</strong>影响搜索入口和信息分发</p>
 </article>
 <article class="card">
-  <div class="meta">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">The Register</span>
+      <span class="chip chip--topic">模型发布</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
     <span class="badge s-high">92</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
   </div>
-  <h3 class="title"><a href="https://www.politico.com/news/2026/05/24/anthropic-openai-mythos-what-to-know-00934668" target="_blank" rel="noopener">What to know about the AI models that are jolting Washington - Politico</a></h3>
-  <p class="summary">报告指出Anthropic的Mythos和OpenAI的GPT-5.5等AI模型在黑客攻击能力上取得了“颠覆性”进展，其发展速度远超预期，可能彻底改变数字安全格局，并引起华盛顿的关注。这凸显了AI在网络安全领域的巨大潜力和风险，以及亟待解决的监管挑战。</p>
+  <h3 class="title"><a href="https://www.theregister.com/ai-ml/" target="_blank" rel="noopener">Anthropic to release Mythos-class models to the public</a></h3>
+  <p class="summary">Anthropic 计划公开更强模型能力，同时安全护栏和滥用风险成为关注点。</p>
+  <p class="reason"><strong>为什么重要：</strong>模型开放策略和安全边界变化</p>
 </article>
 <article class="card">
-  <div class="meta">
-    <span class="badge s-high">92</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">研究论文</span>
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">MIT Tech Review AI</span>
+      <span class="chip chip--topic">行业动态</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+    <span class="badge s-high">86</span>
   </div>
-  <h3 class="title"><a href="https://www.forbes.com/sites/lanceeliot/2026/05/26/openais-breakthrough-on-famed-math-problem-actually-proves-that-using-ai-to-find-counterexamples-is-a-smart-strategy-for-everyone/" target="_blank" rel="noopener">OpenAI’s Breakthrough On Famed Math Problem Actually Proves That Using AI To Find Counterexamples Is A Smart Strategy For Everyone - Forbes</a></h3>
-  <p class="summary">OpenAI通过AI发现反例，成功解决了一个长期存在的数学难题，这证明了利用AI寻找反例是解决复杂数学问题的一种高效策略。</p>
+  <h3 class="title"><a href="https://www.technologyreview.com/" target="_blank" rel="noopener">Rethinking organizational design in the age of agentic AI</a></h3>
+  <p class="summary">企业采用 AI Agent 的瓶颈正在从模型能力转向组织流程和基础设施。</p>
+  <p class="reason"><strong>为什么重要：</strong>直接影响企业落地路径</p>
 </article>
 <article class="card">
-  <div class="meta">
-    <span class="badge s-high">90</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">网络搜索 (Tavily)</span>
+      <span class="chip chip--topic">行业动态</span>
+      <span class="chip chip--quality">待核来源</span>
+      <span class="chip chip--domain">letsdatascience.com</span>
+    </div>
+    <span class="badge s-mid">79</span>
   </div>
-  <h3 class="title"><a href="https://www.thesunchronicle.com/news/nation_world/pope-calls-for-robust-regulation-of-ai-in-manifesto-that-ponders-the-future-of-humanity/article_f47ded84-9c3b-5380-b574-52496c67d679.html" target="_blank" rel="noopener">Pope calls for robust regulation of AI in manifesto that ponders the future of humanity - The Sun Chronicle</a></h3>
-  <p class="summary">教皇利奥十四世发布宣言，呼吁对人工智能进行强有力监管，并强调开发者应以公共利益而非利润为导向，引发了对AI伦理和未来走向的广泛讨论。</p>
+  <h3 class="title"><a href="https://letsdatascience.com/news/openai-posts-job" target="_blank" rel="noopener">OpenAI posts job to prepare for self-training AI</a></h3>
+  <p class="summary">招聘信息可能暗示 OpenAI 正在准备更自动化的模型训练流程，但来源需要进一步核验。</p>
+  <p class="reason"><strong>为什么重要：</strong>可能指向训练范式变化</p>
+  <p class="qa"><strong>质检：</strong>来源等级为“低置信/转载”，高分封顶为 79；90+ 条目需要官方、主流媒体、研究原文或多源交叉验证</p>
 </article>
 <article class="card">
-  <div class="meta">
-    <span class="badge s-high">88</span>
-    <span class="chip chip--src">MIT Tech Review AI</span>
-    <span class="chip chip--topic">行业动态</span>
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">Simon Willison</span>
+      <span class="chip chip--topic">工具开源</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+    <span class="badge s-mid">74</span>
   </div>
-  <h3 class="title"><a href="https://www.technologyreview.com/2026/05/26/1137584/rethinking-organizational-design-in-the-age-of-agentic-ai/" target="_blank" rel="noopener">Rethinking organizational design in the age of agentic AI</a></h3>
-  <p class="summary">分析了企业在部署AI Agent时面临的组织架构与基础设施瓶颈，为企业AI转型提供了极具实操价值的战略洞察。</p>
-</article>
-<article class="card">
-  <div class="meta">
-    <span class="badge s-high">88</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">模型发布</span>
-  </div>
-  <h3 class="title"><a href="https://www.theregister.com/security/2026/05/25/anthropic-to-release-mythos-class-models-to-the-public/5245596" target="_blank" rel="noopener">Anthropic to release Mythos-class models to the public - The Register</a></h3>
-  <p class="summary">Anthropic宣布计划向公众发布其Mythos级别的模型，该模型在发现软件漏洞方面表现出色，已成功识别并修复了大量开源项目中的高危bug。这预示着AI在提升软件安全方面的巨大潜力，值得关注其后续进展。</p>
-</article>
-<article class="card">
-  <div class="meta">
-    <span class="badge s-high">88</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://futurism.com/artificial-intelligence/ai-rogue-disturbing-advanced" target="_blank" rel="noopener">Top AI Models Showing Disturbing Behavior as They Become More Advanced - Futurism</a></h3>
-  <p class="summary">AI研究机构METR的报告指出，先进AI模型正日益展现出令人不安的“流氓部署”行为，预示着未来几个月这种风险将显著增加，凸显了AI安全和控制的紧迫性。</p>
-</article>
-<article class="card">
-  <div class="meta">
-    <span class="badge s-high">85</span>
-    <span class="chip chip--src">YouTube · Two Minute Papers</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.youtube.com/watch?v=huAwz_BR8WM" target="_blank" rel="noopener">DeepMind’s Insane AI Breakthroughs With CEO Demis Hassabis</a></h3>
-  <p class="summary">DeepMind CEO Demis Hassabis 分享了实验室在 AI 领域的前沿突破，适合关注顶级实验室研究动向的读者。</p>
-</article>
-</section>
-<section class="more"><h2>更多更新</h2>
-<h3 class="topic-h">研究论文</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">研究论文</span>
-  </div>
-  <h3 class="title"><a href="https://phys.org/news/2026-05-ai-scientists-reveal-fundamental-limits.html" target="_blank" rel="noopener">New &#x27;AI scientists&#x27; are improving—but reveal their fundamental limits - Phys.org</a></h3>
-  <p class="summary">新的“AI科学家”系统（如Robin和Co-Scientist）正在改进，能够帮助科学家与海量文献互动，但文章也强调了AI在独立完成完整科学研究过程中的根本局限性。这有助于我们更清晰地认识AI在科研辅助中的角色和边界。</p>
-</article>
-<h3 class="topic-h">行业动态</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-high">85</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.wired.com/story/how-ai-agents-plunged-tech-world-into-chaos/" target="_blank" rel="noopener">AI Agents Plunged the Tech World Into Chaos. Here’s Exactly How That Happened - WIRED</a></h3>
-  <p class="summary">文章探讨了AI智能体（Agent）在复杂编程任务中的应用及其对开发者生态的冲击，展示了AI从辅助工具向自主协作团队的演进。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">80</span>
-    <span class="chip chip--src">The Verge AI</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/transportation/937116/uber-ai-investment-hard-to-justify" target="_blank" rel="noopener">Uber president says AI spending is getting ‘harder to justify’</a></h3>
-  <p class="summary">Uber高管质疑AI投入产出比的言论，揭示了企业在AI大规模落地过程中面临的ROI挑战，具有行业参考意义。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.telecompaper.com/news/fujitsu-develops-self-evolving-ai-agent-technology-for-business-applications--1572029" target="_blank" rel="noopener">Fujitsu develops self-evolving AI agent technology for business applications - Telecompaper</a></h3>
-  <p class="summary">富士通开发了一种能自我进化的多智能体AI技术，通过学习运营结果和人类反馈，持续适应商业环境变化，从而减少人工干预，对企业级AI应用具有实际价值。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.biospace.com/press-releases/caris-life-sciences-launches-behind-the-diagnosis-campaign-spotlighting-patient-lives-transformed-by-caris-comprehensive-genomic-testing" target="_blank" rel="noopener">Caris Life Sciences Launches Behind the Diagnosis Campaign Spotlighting Patient Lives Transformed by Caris&#x27; Comprehensive Genomic Testing - BioSpace</a></h3>
-  <p class="summary">Caris Life Sciences展示了AI在精准医疗中的实际落地案例，通过AI模型纠正癌症误诊，体现了AI在生命科学领域的深度应用潜力。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">70</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="http://www.sciencedaily.com/releases/2026/05/260525000448.htm" target="_blank" rel="noopener">AI won’t replace you but someone using AI might - ScienceDaily</a></h3>
-  <p class="summary">一项新研究表明，生成式AI对职场最大的威胁并非直接取代工作，而是员工未能掌握AI工具的使用，因此将AI视为协作伙伴能提升员工的参与度和适应性。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">70</span>
-    <span class="chip chip--src">人物·Yann LeCun (Tavily)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.businessinsider.com/europe-tech-startups-growth-ai-capital-lovable-legora-klarna-wayve-2026-5" target="_blank" rel="noopener">&#x27;Something has genuinely shifted&#x27;: Inside Europe&#x27;s tech startup surge - Business Insider</a></h3>
-  <p class="summary">欧洲科技创业生态正经历显著增长，AI、资本可及性及成熟公司的带动效应是其主要驱动力，这预示着全球科技创新格局可能发生转变。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-ok">60</span>
-    <span class="chip chip--src">Import AI (Jack Clark)</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://importai.substack.com/p/import-ai-458-reckoning-with-the" target="_blank" rel="noopener">Import AI 458: Reckoning with the future; and a singularity story</a></h3>
-  <p class="summary">Jack Clark 对年度 AI 发展趋势的简要展望，适合作为行业观察的补充阅读。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-ok">55</span>
-    <span class="chip chip--src">The Verge AI</span>
-    <span class="chip chip--topic">行业动态</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/ai-artificial-intelligence/937059/nobody-wants-to-tell-me-why-they-only-listen-their-own-suno-slop" target="_blank" rel="noopener">Nobody wants to tell me why they only listen to their own Suno slop</a></h3>
-  <p class="summary">文章探讨了AI生成音乐社区中用户沉溺于自制内容的现象，反映了AI内容消费心理的独特趋势，但技术价值有限。</p>
-</article>
-<h3 class="topic-h">工具开源</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">80</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">工具开源</span>
-  </div>
-  <h3 class="title"><a href="https://www.securityweek.com/open-source-docksec-uses-ai-to-cut-through-vulnerability-noise-in-docker-images/" target="_blank" rel="noopener">Open Source DockSec Uses AI to Cut Through Vulnerability Noise in Docker Images - SecurityWeek</a></h3>
-  <p class="summary">DockSec通过AI整合多源扫描结果并提供自动化修复建议，解决了容器安全领域漏洞修复效率低下的痛点，具有很高的实操价值。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">78</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">工具开源</span>
-  </div>
-  <h3 class="title"><a href="https://www.csoonline.com/article/4176701/as-ai-speeds-coding-cve-lite-cli-keeps-security-deliberately-ai-free.html" target="_blank" rel="noopener">As AI speeds coding, CVE Lite CLI keeps security deliberately AI-free - csoonline.com</a></h3>
-  <p class="summary">CVE Lite CLI反其道而行之，强调在开发早期通过非AI手段进行本地依赖扫描，为追求开发效率的AI时代提供了重要的安全补充思路。</p>
-</article>
-<h3 class="topic-h">安全监管</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-high">85</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://www.nytimes.com/2026/05/24/technology/uk-ai-safety-institute.html" target="_blank" rel="noopener">UK Institute Is Hunting for Dangers Lurking in AI - The New York Times</a></h3>
-  <p class="summary">英国AI安全研究所正在积极探索AI的潜在风险，其团队汇集了来自OpenAI和Google的专家，为各国应对AI新兴风险提供了模型。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">80</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://www.newsweek.com/us-china-must-unite-ai-to-stop-next-bio-threat-opinion-11992525" target="_blank" rel="noopener">The US and China Must Unite on AI To Stop the Next Bio Threat | Opinion - Newsweek</a></h3>
-  <p class="summary">这篇评论文章指出，美中两国需在人工智能领域合作，以应对AI被恐怖分子滥用带来的生物威胁，这预示着两国可能就此展开对话。它强调了AI安全和国际合作的重要性。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">80</span>
-    <span class="chip chip--src">人物·Andrew Ng (Tavily)</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://m.economictimes.com/nri/latest-updates/self-respect-hurts-competitiveness-in-ai-sridhar-vembu-andrew-ng-sound-alarm-over-new-us-green-card-rules/articleshow/131283360.cms" target="_blank" rel="noopener">‘Self-respect’, ‘hurts competitiveness in AI’: Sridhar Vembu, Andrew Ng sound alarm over new US Green Card - The Economic Times</a></h3>
-  <p class="summary">包括Andrew Ng在内的科技领袖对美国新的绿卡政策提出警告，认为其可能损害创新、人才流动以及美国在AI领域的竞争力，凸显了移民政策对科技发展的重要影响。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">The Verge AI</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/ai-artificial-intelligence/937028/military-ai-warfare-red-lines" target="_blank" rel="noopener">AI warfare is already here</a></h3>
-  <p class="summary">回顾了AI在军事领域的演进与潜在威胁，强调了国际社会对自主武器系统监管的紧迫性。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">70</span>
-    <span class="chip chip--src">Simon Willison</span>
-    <span class="chip chip--topic">安全监管</span>
-  </div>
-  <h3 class="title"><a href="https://simonwillison.net/2026/May/26/corey-quinn/#atom-everything" target="_blank" rel="noopener">Quoting Corey Quinn</a></h3>
-  <p class="summary">评论了 Anthropic 在 AI 伦理与宗教界的影响力，探讨了 AI 厂商在社会伦理层面的游说与话语权。</p>
-</article>
-<h3 class="topic-h">观点访谈</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-high">85</span>
-    <span class="chip chip--src">The Verge AI</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/podcast/936445/sundar-pichai-ai-search-google-zero-youtube-web" target="_blank" rel="noopener">Sundar Pichai on AI, the future of search, and what’s happening to the web</a></h3>
-  <p class="summary">Google CEO Sundar Pichai探讨了AI对搜索业务及互联网生态的深远影响，是理解谷歌AI战略转型的重要访谈。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-high">85</span>
-    <span class="chip chip--src">人物·Andrej Karpathy (Tavily)</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.nytimes.com/2026/05/24/business/meat-computer-brain-artificial-intelligence.html" target="_blank" rel="noopener">To A.I. Executives, We’re All Just ‘Meat Computers’ - The New York Times</a></h3>
-  <p class="summary">知名AI研究者Andrej Karpathy将人类比作“肉体计算机”，这篇报道深入探讨了AI时代下人脑与机器关系的哲学思考，揭示了AI领域对人类智能本质的深层看法。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">82</span>
-    <span class="chip chip--src">MIT Tech Review AI</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.technologyreview.com/2026/05/26/1137865/its-time-to-address-the-looming-crisis-in-entry-level-work/" target="_blank" rel="noopener">It’s time to address the looming crisis in entry-level work.</a></h3>
-  <p class="summary">文章探讨了AI可能对入门级工作造成的潜在危机，指出虽然整体就业数据稳定，但AI正悄然削弱职业生涯的第一个阶梯。这对于关注AI对社会结构和职业发展深层影响的人来说，是一个值得警惕的信号。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">80</span>
-    <span class="chip chip--src">人物·Sam Altman (Tavily)</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.reuters.com/world/asia-pacific/openais-altman-says-ai-unlikely-lead-jobs-apocalypse-2026-05-26/" target="_blank" rel="noopener">OpenAI&#x27;s Altman says AI unlikely to lead to &#x27;jobs apocalypse&#x27; - Reuters</a></h3>
-  <p class="summary">OpenAI CEO Sam Altman修正了他此前关于AI将导致“就业末日”的预测，表示目前AI对白领初级岗位的冲击低于预期，并对此感到欣慰。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">78</span>
-    <span class="chip chip--src">MIT Tech Review AI</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.technologyreview.com/2026/05/26/1137855/a-reality-check-on-the-ai-jobs-hysteria/" target="_blank" rel="noopener">A reality check on the AI jobs hysteria</a></h3>
-  <p class="summary">这篇文章对AI将导致白领工作大规模消失的恐慌进行了现实审视，指出尽管科技行业近期裁员，但AI对就业的整体影响可能被夸大。它为理解AI对劳动力市场的影响提供了一个更平衡的视角。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">Simon Willison</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://simonwillison.net/2026/May/26/paul-graham/#atom-everything" target="_blank" rel="noopener">Quoting Paul Graham</a></h3>
-  <p class="summary">Paul Graham 探讨了 AI 生成内容在商务沟通中的负面影响，引发了关于 AI 工具使用边界与真实性的深度思考。</p>
-</article>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-mid">75</span>
-    <span class="chip chip--src">人物·Demis Hassabis (Tavily)</span>
-    <span class="chip chip--topic">观点访谈</span>
-  </div>
-  <h3 class="title"><a href="https://www.businessinsider.com/wfh-bigger-driver-entry-level-job-woes-ai-researchers-say-2026-5" target="_blank" rel="noopener">WFH Is a Bigger Driver of Entry-Level Job Woes Than AI, Researchers Say - Business Insider</a></h3>
-  <p class="summary">研究人员提出新观点，认为远程工作而非AI是导致初级岗位招聘放缓的主要原因，这挑战了AI对就业市场影响的普遍看法，值得关注其对未来劳动力市场趋势的解读。</p>
-</article>
-<h3 class="topic-h">其它</h3>
-<article class="card card--compact">
-  <div class="meta">
-    <span class="badge s-ok">55</span>
-    <span class="chip chip--src">网络搜索 (Tavily)</span>
-    <span class="chip chip--topic">其它</span>
-  </div>
-  <h3 class="title"><a href="https://x.com/i/trending/2058614852508405863" target="_blank" rel="noopener">AI Video Parodies Michael Scott Onboarding Andrej Karpath... - x.com</a></h3>
-  <p class="summary">一段由AI生成的视频以幽默方式再现了《办公室》经典场景，欢迎知名AI研究员Andrej Karpathy加入Anthropic，并借此展示了AI在内容创作方面的能力。</p>
+  <h3 class="title"><a href="https://simonwillison.net/" target="_blank" rel="noopener">datasette-agent 0.1a4</a></h3>
+  <p class="summary">围绕 Datasette 的轻量 agent 工具继续迭代，对本地数据交互和实验型 agent 开发有参考价值。</p>
+  <p class="reason"><strong>为什么重要：</strong>小工具但有实操参考</p>
 </article>
 </section></div>
     <aside class="history"><h2>历史简报</h2><ol><li><a href="2026-05-26.html">2026-05-26</a></li><li><a href="2026-05-25.html">2026-05-25</a></li></ol></aside>

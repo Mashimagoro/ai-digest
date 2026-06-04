@@ -23,13 +23,17 @@ youtube:
     channel_id: "UCJIfeSCssxSC_Dhc5s7woww"
 
 # ---- 新闻 / Newsletter / 博客（RSS / Atom） ----
+# 可选的源级过滤（不必把相关性全压给 AI）：
+#   require_keywords: ["ai", "llm"]   # 标题须含其一，否则丢弃（适合“全量型”信源）
+#   block_keywords:   ["招聘"]         # 标题含其一就丢弃
 rss:
   - name: "Import AI (Jack Clark)"
     url: "https://importai.substack.com/feed"
   - name: "Ahead of AI (Sebastian Raschka)"
     url: "https://magazine.sebastianraschka.com/feed"
   - name: "Simon Willison"
-    url: "https://simonwillison.net/atom/everything/"
+    # 用 AI tag 专属 feed，避开他“全量”feed 里的观鸟/生活类内容
+    url: "https://simonwillison.net/tags/ai.atom"
   - name: "The Verge AI"
     url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
   - name: "Ars Technica AI"
