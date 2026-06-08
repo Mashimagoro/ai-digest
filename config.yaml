@@ -1,66 +1,168 @@
 # ============================================================
-# AI Digest — 配置文件。改这里即可，无需动代码。
+# 今日重要信号 — 配置文件。改这里即可，无需动代码。
 # ============================================================
 
 # 只保留发布时间在这个窗口内的条目（小时）。
-# 每天跑一次给一点冗余，30 小时能覆盖偶尔的运行延迟。
-lookback_hours: 30
+# 扩到 48 小时：宁可多给 AI 一点候选，也避免高质量源周末/时差导致条目太少。
+lookback_hours: 48
 
 # ---- YouTube 频道（用频道 ID，免费 RSS） ----
-# 频道 ID 解析方法见 README。
-youtube:
-  - name: "Andrej Karpathy"
-    channel_id: "UCYO_jab_esuFRV4b17AJtAw"
-  - name: "Two Minute Papers"
-    channel_id: "UCbfYPyITQ-7l4upoX8nvctg"
-  - name: "Yannic Kilcher"
-    channel_id: "UCHmD-oSpV0sNfAUnpYpj8KA"
-  - name: "AI Explained"
-    channel_id: "UCNJ1Ymd5yFuUPtn21xtRbbw"
-  - name: "ML Street Talk"
-    channel_id: "UCZHmQk67mSJgfCCTn7xBfew"
-  - name: "Lex Fridman"
-    channel_id: "UCJIfeSCssxSC_Dhc5s7woww"
+# 先停用视频源：视频更新时间不稳定，且容易把简报拉回 AI-only 长内容。
+youtube: []
 
 # ---- 新闻 / Newsletter / 博客（RSS / Atom） ----
+# 可选的源级过滤（不必把相关性全压给 AI）：
+#   require_keywords: ["ai", "llm"]   # 标题须含其一，否则丢弃（适合“全量型”信源）
+#   block_keywords:   ["招聘"]         # 标题含其一就丢弃
 rss:
-  - name: "Import AI (Jack Clark)"
-    url: "https://importai.substack.com/feed"
-  - name: "Ahead of AI (Sebastian Raschka)"
-    url: "https://magazine.sebastianraschka.com/feed"
-  - name: "Simon Willison"
-    url: "https://simonwillison.net/atom/everything/"
+  # AI：每天保留
+  - name: "Google DeepMind Blog"
+    url: "https://deepmind.google/blog/rss.xml"
+    section: "AI"
+    max_items: 6
   - name: "The Verge AI"
     url: "https://www.theverge.com/rss/ai-artificial-intelligence/index.xml"
-  - name: "Ars Technica AI"
-    url: "https://arstechnica.com/ai/feed/"
+    section: "AI"
+    max_items: 6
   - name: "MIT Tech Review AI"
     url: "https://www.technologyreview.com/topic/artificial-intelligence/feed"
+    section: "AI"
+    max_items: 6
+  - name: "TechCrunch AI"
+    url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+    section: "AI"
+    max_items: 6
+  - name: "Ars Technica AI"
+    url: "https://arstechnica.com/ai/feed/"
+    section: "AI"
+    max_items: 6
+  - name: "Simon Willison AI"
+    url: "https://simonwillison.net/tags/ai.atom"
+    section: "AI"
+    max_items: 5
+  - name: "Hugging Face Blog"
+    url: "https://huggingface.co/blog/feed.xml"
+    section: "AI"
+    max_items: 6
+  - name: "量子位"
+    url: "https://www.qbitai.com/feed"
+    section: "AI"
+    max_items: 6
+
+  # 宏观/政策：有重要变化才上
+  - name: "国家统计局 数据发布"
+    url: "https://www.stats.gov.cn/sj/zxfb/rss.xml"
+    section: "宏观/政策"
+    max_items: 6
+  - name: "Federal Reserve"
+    url: "https://www.federalreserve.gov/feeds/press_all.xml"
+    section: "宏观/政策"
+    max_items: 6
+  - name: "SEC Press Releases"
+    url: "https://www.sec.gov/news/pressreleases.rss"
+    section: "宏观/政策"
+    max_items: 5
+  - name: "European Central Bank"
+    url: "https://www.ecb.europa.eu/rss/press.html"
+    section: "宏观/政策"
+    max_items: 5
+  - name: "BBC Business"
+    url: "https://feeds.bbci.co.uk/news/business/rss.xml"
+    section: "宏观/政策"
+    max_items: 8
+
+  # 商业/科技：优先选产业变化
+  - name: "TechCrunch"
+    url: "https://techcrunch.com/feed/"
+    section: "商业/科技"
+    max_items: 8
+  - name: "The Verge Tech"
+    url: "https://www.theverge.com/rss/tech/index.xml"
+    section: "商业/科技"
+    max_items: 8
+  - name: "NYT Technology"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml"
+    section: "商业/科技"
+    max_items: 8
+  - name: "36氪"
+    url: "https://36kr.com/feed"
+    section: "商业/科技"
+    max_items: 8
+  - name: "钛媒体"
+    url: "https://www.tmtpost.com/rss.xml"
+    section: "商业/科技"
+    max_items: 8
+
+  # 国际/社会：只选有长期影响的
+  - name: "BBC World"
+    url: "https://feeds.bbci.co.uk/news/world/rss.xml"
+    section: "国际/社会"
+    max_items: 8
+  - name: "The Guardian World"
+    url: "https://www.theguardian.com/world/rss"
+    section: "国际/社会"
+    max_items: 8
+  - name: "NYT World"
+    url: "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"
+    section: "国际/社会"
+    max_items: 8
+  - name: "WHO News"
+    url: "https://www.who.int/rss-feeds/news-english.xml"
+    section: "国际/社会"
+    max_items: 5
+
+  # 消费/生活：偶尔补充，更接地气
+  - name: "BBC Technology"
+    url: "https://feeds.bbci.co.uk/news/technology/rss.xml"
+    section: "消费/生活"
+    max_items: 6
+  - name: "The Guardian Technology"
+    url: "https://www.theguardian.com/technology/rss"
+    section: "消费/生活"
+    max_items: 6
 
 # ---- Tavily 网页新闻搜索（补固定 RSS 之外的大新闻；需要 TAVILY_API_KEY） ----
 tavily:
   enabled: true
-  days: 3                # 只取近 N 天的新闻，避免捞回旧文
-  max_results: 5         # 每条查询取几条
+  days: 2                # 只取近 N 天的新闻，避免捞回旧文
+  max_results: 4         # 每条查询取几条
   queries:
-    - "new large language model release OpenAI Anthropic Google DeepMind"
-    - "AI research breakthrough new paper"
-    - "AI safety alignment regulation policy"
-    - "open source AI model tool launch"
+    - query: "site:openai.com/news OR site:anthropic.com/news OR site:deepmind.google/blog latest AI model product release"
+      section: "AI"
+      source: "AI 官方补源 (Tavily)"
+    - query: "Reuters OR AP OR Bloomberg major AI regulation model launch semiconductor AI infrastructure"
+      section: "AI"
+      source: "AI 高可信媒体补源 (Tavily)"
+    - query: "site:gov.cn OR site:pbc.gov.cn OR site:stats.gov.cn 中国 重要 政策 宏观 经济"
+      section: "宏观/政策"
+      source: "中国政策补源 (Tavily)"
+    - query: "Reuters Bloomberg Financial Times central bank inflation trade fiscal policy latest"
+      section: "宏观/政策"
+      source: "宏观高可信媒体补源 (Tavily)"
+    - query: "Reuters Bloomberg Financial Times major company earnings acquisition layoffs semiconductor cloud AI latest"
+      section: "商业/科技"
+      source: "商业科技补源 (Tavily)"
+    - query: "site:latepost.com OR site:caixin.com OR site:jiemian.com 科技 公司 产业 资本"
+      section: "商业/科技"
+      source: "中文商业科技补源 (Tavily)"
+    - query: "Reuters AP BBC long term impact world policy society conflict climate health latest"
+      section: "国际/社会"
+      source: "国际社会补源 (Tavily)"
+    - query: "consumer technology health education travel housing cost of living major change"
+      section: "消费/生活"
+      source: "消费生活补源 (Tavily)"
   # 想盯的 X / 行业人物——Tavily 搜他们近期的相关报道与言论（不是原始推文）
   people:
-    - "Andrej Karpathy"
     - "Sam Altman"
     - "Demis Hassabis"
-    - "Yann LeCun"
     - "Dario Amodei"
     - "Andrew Ng"
-  people_max_results: 3   # 每个人物取几条
+  people_max_results: 2   # 每个人物取几条
 
 # ---- 预过滤（在调用 AI 之前，省额度。留空=不过滤） ----
 filters:
   # 标题含这些词就丢弃（公关稿/聚合简报噪音）
-  blocked_keywords: ["crypto", "trading bot", "tech brief", "price prediction"]
+  blocked_keywords: ["trading bot", "price prediction", "sponsored post", "press release distribution"]
   required_keywords: []       # 非空时，标题必须含其中之一
 
 # ---- AI 富化（Gemini Flash，免费） ----
@@ -69,13 +171,14 @@ ai:
   model: "gemini-2.0-flash"
   rate_limit_seconds: 7       # 每次调用间隔
   batch_size: 5               # 每次调用处理几条
-  min_score: 55               # 低于此分的条目不进简报（过滤低信号水文）
+  min_score: 45               # 先放宽候选，最终由板块限量控制，避免每日条目太少
   # 你关心的方向，AI 据此打分
   priorities:
-    - "大模型能力突破、新模型发布、重要 benchmark"
-    - "知名研究者/实验室的观点与新作"
-    - "AI 安全、对齐、监管的重要进展"
-    - "有实操价值的工程方法、工具、开源项目"
+    - "AI：每天保留，优先选模型、产品、算力、监管或真实使用变化"
+    - "宏观/政策：只选会影响市场预期、行业规则或普通人生活成本的变化"
+    - "商业/科技：优先选大公司战略、产业链、并购、财报、基础设施变化"
+    - "国际/社会：只选有长期外溢影响的事件"
+    - "消费/生活：偶尔补充，必须和普通人的工具、健康、教育、住房、出行或消费有关"
 
 # ---- 信源权重与自动质检 ----
 # 这些规则会同时影响 AI 打分提示词和最终分数封顶。
@@ -87,9 +190,21 @@ source_quality:
     - "deepmind.google"
     - "googleblog.com"
     - "microsoft.com"
+    - "apple.com"
+    - "nvidia.com"
     - "mistral.ai"
     - "huggingface.co"
     - "github.blog"
+    - "gov.cn"
+    - "pbc.gov.cn"
+    - "stats.gov.cn"
+    - "ndrc.gov.cn"
+    - "mof.gov.cn"
+    - "federalreserve.gov"
+    - "sec.gov"
+    - "ecb.europa.eu"
+    - "europa.eu"
+    - "who.int"
   high_confidence_domains:
     - "techmeme.com"
     - "theverge.com"
@@ -113,6 +228,18 @@ source_quality:
     - "wired.com"
     - "nature.com"
     - "science.org"
+    - "bbc.com"
+    - "bbc.co.uk"
+    - "theguardian.com"
+    - "nikkei.com"
+    - "semafor.com"
+    - "theinformation.com"
+    - "caixin.com"
+    - "latepost.com"
+    - "36kr.com"
+    - "tmtpost.com"
+    - "qbitai.com"
+    - "jiqizhixin.com"
   research_domains:
     - "arxiv.org"
     - "openreview.net"
@@ -137,9 +264,25 @@ quality_gates:
 
 # ---- 简报与邮件 ----
 digest:
-  subject_prefix: "AI 速览"
-  top_n: 8                    # 置顶“今日重点”取前几条
+  subject_prefix: "今日重要信号"
+  top_n: 8                    # 兼容旧参数；新版按 sections 控制
   write_overview: true        # 是否让 AI 写一段当日总览
+  sections:
+    - label: "AI"
+      note: "每天保留"
+      max_items: 2
+    - label: "宏观/政策"
+      note: "有重要变化才上"
+      max_items: 2
+    - label: "商业/科技"
+      note: "优先选产业变化"
+      max_items: 2
+    - label: "国际/社会"
+      note: "只选有长期影响的"
+      max_items: 1
+    - label: "消费/生活"
+      note: "偶尔补充，更接地气"
+      max_items: 1
 
 mail:
   smtp_host: "smtp.qq.com"

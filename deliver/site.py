@@ -8,19 +8,11 @@ from __future__ import annotations
 import html
 from pathlib import Path
 
+from ai.digest import _section_heading, sectionize
+
 ROOT = Path(__file__).parent.parent
 DOCS = ROOT / "docs"
 DIGEST_DIR = DOCS / "digests"
-
-TOPIC_ORDER = [
-    "模型发布",
-    "研究论文",
-    "行业动态",
-    "工具开源",
-    "安全监管",
-    "观点访谈",
-    "其它",
-]
 
 
 def _score_class(score: int) -> str:
@@ -63,12 +55,20 @@ def _card(it: dict, compact: bool = False) -> str:
     if qa_notes:
         qa_html = f'\n  <p class="qa"><strong>质检：</strong>{"；".join(qa_notes)}</p>'
     cls = "card card--compact" if compact else "card"
-    return f"""<article class="{cls}">
+    band = "high" if score >= 85 else "mid" if score >= 70 else "watch"
+    tier_raw = it.get("source_tier", "")
+    cred_raw = it.get("ai_credibility") or it.get("source_credibility", "")
+    if tier_raw == "official":
+        conf = "official"
+    elif tier_raw == "high" or cred_raw == "高":
+        conf = "verified"
+    else:
+        conf = "pending"
+    return f"""<article class="{cls}" data-band="{band}" data-conf="{conf}">
   <div class="card-head">
     <div class="meta">
       {chip_html}
     </div>
-    <span class="badge {_score_class(score)}">{score}</span>
   </div>
   <h3 class="title"><a href="{url}" target="_blank" rel="noopener">{title}</a></h3>
   <p class="summary">{summary}</p>{reason_html}{qa_html}
@@ -76,36 +76,22 @@ def _card(it: dict, compact: bool = False) -> str:
 
 
 def _digest_body(items: list[dict], cfg: dict, intro: str, top_n: int) -> str:
-    ranked = sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True)
     parts: list[str] = []
-    fallback = _is_fallback_run(ranked)
+    fallback = _is_fallback_run(items)
+    sections = sectionize(items, cfg)
 
     if intro:
         bullets = "".join(f"<li>{html.escape(line.lstrip('- ').strip())}</li>" for line in intro.splitlines() if line.strip())
-        parts.append(f'<section class="overview"><h2>今日要点</h2><ul>{bullets}</ul></section>')
+        parts.append(f'<section class="overview"><h2>今日判断</h2><ul>{bullets}</ul></section>')
     elif fallback:
         parts.append(
             '<section class="overview overview--muted"><h2>本地预览</h2>'
             '<p>当前页面由无 AI 密钥的本地试跑生成，仅用于检查版式；正式运行会恢复评分、摘要和今日要点。</p></section>'
         )
 
-    lead_title = "最新抓取" if fallback else "重点条目"
-    parts.append(f'<section><h2>{lead_title}</h2>')
-    parts += [_card(it) for it in ranked[:top_n]]
-    parts.append("</section>")
-
-    rest = ranked[top_n:]
-    if rest:
-        by_topic: dict[str, list[dict]] = {}
-        for it in rest:
-            by_topic.setdefault(it.get("ai_topic", "其它"), []).append(it)
-        parts.append('<section class="more"><h2>更多更新</h2>')
-        for topic in TOPIC_ORDER:
-            group = by_topic.get(topic)
-            if not group:
-                continue
-            parts.append(f'<h3 class="topic-h">{html.escape(topic)}</h3>')
-            parts += [_card(it, compact=True) for it in group]
+    for section in sections:
+        parts.append(f'<section><h2>{html.escape(_section_heading(section))}</h2>')
+        parts += [_card(it) for it in section["items"]]
         parts.append("</section>")
     return "\n".join(parts)
 
@@ -135,7 +121,7 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
         links = "".join(
             f'<li><a href="{digest_href(d)}">{d}</a></li>' for d in history[:60]
         )
-        hist_html = f'<aside class="history"><h2>历史简报</h2><ol>{links}</ol></aside>'
+        hist_html = f'<aside class="history" id="history"><h2>历史简报</h2><ol>{links}</ol></aside>'
     title_text = html.escape(title)
     return f"""<!doctype html>
 <html lang="zh-CN">
@@ -149,30 +135,29 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
 <div class="stage">
   <header class="site-head">
     <div class="nav-pill">
-      <span class="nav-mark">AI</span>
-      <span>Digest</span>
-      <span>Signals</span>
-      <span>Sources</span>
-      <span>History</span>
+      <a class="nav-mark" href="#top">信号</a>
+      <a href="#top">本期</a>
+      <a href="#sections">板块</a>
+      <a href="#history">历史</a>
     </div>
-    <div class="hero-panel hero-panel--left">
-      <span>Impact Levels</span>
-      <b>High Impact</b>
-      <b>Medium Impact</b>
-      <b>Watchlist</b>
+    <div class="hero-panel hero-panel--left" id="sections">
+      <span>固定板块</span>
+      <p>AI 每天保留</p>
+      <p>宏观/政策 有变化才上</p>
+      <p>商业/科技 看产业变化</p>
     </div>
     <div class="hero-panel hero-panel--right">
-      <span>Confidence</span>
-      <b>Official</b>
-      <b>Verified</b>
-      <b>Pending</b>
+      <span>入选原则</span>
+      <p>官方与高质量媒体优先</p>
+      <p>不硬凑板块</p>
+      <p>每条只保留一句影响</p>
     </div>
     <div class="beam" aria-hidden="true"></div>
-    <p class="eyebrow">Daily AI Signal Brief</p>
-    <h1 class="hero-title">AI INSIGHTS</h1>
-    <p class="hero-subtitle">{title_text} · YouTube · 新闻 · Newsletter · 人物动态</p>
+    <p class="eyebrow">AI-curated Daily Brief</p>
+    <h1 class="hero-title">今日重要信号</h1>
+    <p class="hero-subtitle">{title_text} · AI 筛选整理 · 高质量信源优先</p>
   </header>
-  <main>
+  <main id="top">
     {nav}
     <div class="layout">
       <div class="content">{body}</div>
@@ -180,7 +165,7 @@ def _page(title: str, body: str, home_href: str | None, history: list[str] | Non
     </div>
   </main>
 </div>
-<footer class="site-foot">由 AI Digest 自动生成 · 信源配置见仓库 config.yaml</footer>
+<footer class="site-foot">由「今日重要信号」自动生成 · 信源配置见仓库 config.yaml</footer>
 </body>
 </html>"""
 
@@ -193,7 +178,7 @@ def build(items: list[dict], cfg: dict, intro: str, date_str: str) -> None:
     # 当日页（在 docs/digests/ 下，历史链接同目录、首页在上一级）
     dates_now = sorted({p.stem for p in DIGEST_DIR.glob("*.html")} | {date_str}, reverse=True)
     page = _page(
-        f"AI 速览 · {date_str}",
+        f"{cfg.get('digest', {}).get('subject_prefix', '今日重要信号')} · {date_str}",
         body,
         home_href="../index.html",
         history=dates_now,
@@ -203,7 +188,7 @@ def build(items: list[dict], cfg: dict, intro: str, date_str: str) -> None:
 
     # 首页：展示最新一期 + 历史（链接在 digests/ 子目录）
     index = _page(
-        f"AI 速览 · {date_str}",
+        f"{cfg.get('digest', {}).get('subject_prefix', '今日重要信号')} · {date_str}",
         body,
         home_href=None,
         history=dates_now,
@@ -260,13 +245,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
 .nav-pill{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:8px;
   border:1px solid rgba(226,246,255,.22);border-radius:16px;background:rgba(12,20,35,.66);
   box-shadow:0 8px 36px rgba(0,0,0,.35),0 0 24px rgba(34,211,238,.12) inset;backdrop-filter:blur(18px)}
-.nav-pill span{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
-  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.nav-pill span,.nav-pill a{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
+  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
+  text-decoration:none;transition:color .15s,border-color .15s}
+.nav-pill a:hover{color:var(--accent);border-color:var(--line-strong)}
 .nav-pill .nav-mark{font-weight:900;color:#061018;background:linear-gradient(135deg,var(--accent),var(--signal));
   box-shadow:0 0 18px rgba(34,242,181,.3)}
 .eyebrow{position:relative;z-index:2;margin:86px 0 6px;color:var(--accent);font-size:.78rem;
   text-transform:uppercase;letter-spacing:.16em;font-weight:800}
-.hero-title{position:relative;z-index:2;margin:0;font-size:clamp(4rem,12vw,9.2rem);line-height:.92;
+.hero-title{position:relative;z-index:2;margin:0;font-size:5.8rem;line-height:1.02;
   letter-spacing:0;font-weight:950;color:#fff;text-shadow:0 0 28px rgba(87,229,255,.28),0 8px 32px rgba(0,0,0,.8)}
 .hero-subtitle{position:relative;z-index:2;max-width:620px;margin:24px auto 0;color:#d8ebff;font-size:.92rem;
   text-shadow:0 0 16px rgba(87,229,255,.28)}
@@ -274,8 +261,14 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
   border-radius:16px;background:rgba(6,13,28,.48);box-shadow:0 14px 38px rgba(0,0,0,.36),0 0 34px rgba(34,211,238,.1) inset;
   backdrop-filter:blur(16px);text-align:left;color:var(--muted)}
 .hero-panel span{display:block;margin-bottom:14px;color:#dff7ff;font-size:.76rem}
-.hero-panel b{display:block;margin:7px 0;padding:6px 8px;border-radius:8px;border:1px solid rgba(186,230,253,.16);
-  color:#d8e6f7;font-size:.68rem;font-weight:600;background:rgba(255,255,255,.035)}
+.hero-panel p{margin:7px 0;color:#d8e6f7;font-size:.7rem;line-height:1.45}
+.hero-panel .filt{display:block;width:100%;margin:7px 0;padding:6px 8px;border-radius:8px;
+  border:1px solid rgba(186,230,253,.16);color:#d8e6f7;font-size:.68rem;font-weight:600;
+  background:rgba(255,255,255,.035);text-align:left;cursor:pointer;font-family:inherit;
+  transition:border-color .15s,background .15s,color .15s}
+.hero-panel .filt:hover{border-color:var(--line-strong);color:#fff}
+.hero-panel .filt.active{border-color:var(--accent);color:#061018;
+  background:linear-gradient(135deg,var(--accent),var(--signal));font-weight:800}
 .hero-panel--left{left:7%;top:295px}
 .hero-panel--right{right:7%;top:350px}
 main{max-width:var(--maxw);margin:0 auto;padding:34px 26px 64px}
@@ -338,13 +331,14 @@ section:first-child h2{margin-top:0}
   .site-head{min-height:430px}
   .hero-panel{display:none}
   .eyebrow{margin-top:62px}
+  .hero-title{font-size:3.4rem}
 }
 @media(max-width:520px){
   .nav-pill{max-width:100%;overflow:auto;scrollbar-width:none}
   .nav-pill::-webkit-scrollbar{display:none}
   .nav-pill span{white-space:nowrap}
   .site-head{min-height:380px;padding:22px 16px 30px}
-  .hero-title{font-size:3.6rem}
+  .hero-title{font-size:2.7rem}
   .hero-subtitle{font-size:.82rem}
   main{padding:22px 16px 52px}
   .card{padding:14px}

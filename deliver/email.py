@@ -49,12 +49,12 @@ def _html(inner: str) -> str:
 <style>
   body {{ font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
          line-height: 1.7; color: #1a1a1a; max-width: 720px; margin: 0 auto; padding: 24px; }}
-  h1 {{ font-size: 1.6rem; border-bottom: 2px solid #4f46e5; padding-bottom: 8px; }}
-  h2 {{ font-size: 1.2rem; margin-top: 2rem; color: #4f46e5; }}
+  h1 {{ font-size: 1.6rem; border-bottom: 2px solid #0891b2; padding-bottom: 8px; }}
+  h2 {{ font-size: 1.2rem; margin-top: 2rem; color: #0f766e; }}
   h3 {{ font-size: 1.05rem; margin-bottom: 4px; }}
-  a {{ color: #4f46e5; text-decoration: none; }}
+  a {{ color: #0369a1; text-decoration: none; }}
   a:hover {{ text-decoration: underline; }}
-  code {{ background: #eef; color: #4f46e5; padding: 1px 6px; border-radius: 4px; font-size: 0.85em; }}
+  code {{ background: #ecfeff; color: #0e7490; padding: 1px 6px; border-radius: 4px; font-size: 0.85em; }}
   hr {{ border: none; border-top: 1px solid #ddd; margin: 2rem 0; }}
   li {{ margin: 6px 0; }}
 </style></head><body>{inner}</body></html>"""

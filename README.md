@@ -1,9 +1,9 @@
-# AI Digest
+# 今日重要信号
 
-每天自动抓取 YouTube 频道 + AI 新闻/Newsletter，用 Gemini（免费）写中文摘要并按重要性排序，发一封简报到你的邮箱。跑在 GitHub Actions 上，**全程免费**。
+每天自动抓取高质量 RSS + 网页新闻补源，用 Gemini 筛选成跨领域中文简报，并同步生成网页和邮件。AI 是固定板块，其它板块按当天重要性浮动。
 
 ```
-抓取 (RSS/Atom) → AI 富化 (中文摘要+打分+分类) → 生成 Markdown → 发邮件
+抓取 (RSS/Atom + Tavily 补源) → AI 富化 (中文摘要+五板块分类) → 生成 Markdown → 更新网页 → 发邮件
 ```
 
 ## 5 分钟上手
@@ -25,7 +25,7 @@ python main.py
 > 不填 `GEMINI_API_KEY` 也能跑（跳过 AI，只列原始条目）；不填 `SMTP_*` 则只生成本地文件、不发信。便于先验证抓取是否正常。
 
 ### 3. 上 GitHub Actions（定时自动跑）
-1. 把 `ai-digest/` 推到一个 GitHub 仓库（公共仓库 Actions 免费）。
+1. 把项目推到一个 GitHub 仓库（公共仓库 Actions 免费）。
 2. 仓库 → Settings → Secrets and variables → Actions，添加 4 个 secret：
    `GEMINI_API_KEY`、`SMTP_USER`、`SMTP_PASS`、`MAIL_TO`。
 3. 默认每天北京时间 08:00 自动发；也可在 Actions 页面点 **Run workflow** 手动触发一次测试。
@@ -34,13 +34,16 @@ python main.py
 
 全部在 `config.yaml`，不用动代码：
 
-- **加新闻/Newsletter**：在 `rss:` 下加 `name` + `url`（feed 地址）。
-- **加 YouTube 频道**：在 `youtube:` 下加 `name` + `channel_id`。
-  拿频道 ID：打开频道主页 → 查看网页源代码 → 搜 `channelId`，形如 `UCxxxxxxxxxxxxxxxxxxxxxx`。
-- **过滤/打分方向**：调 `filters` 和 `ai.priorities`。
+- **加固定 RSS 源**：在 `rss:` 下加 `name`、`url`、`section`，必要时加 `max_items`。
+- **加搜索补源**：在 `tavily.queries:` 下加 `query`、`section`、`source`。
+- **改板块排版**：调 `digest.sections`。
+- **过滤/筛选方向**：调 `filters` 和 `ai.priorities`。
 - **改频率**：编辑 `.github/workflows/digest.yml` 里的 `cron`。
 
-## 当前内置信源
+## 当前板块
 
-YouTube：Andrej Karpathy、Two Minute Papers、Yannic Kilcher、AI Explained、ML Street Talk、Lex Fridman
-新闻/博客：Import AI、Ahead of AI、Simon Willison、The Verge AI、Ars Technica AI、MIT Tech Review AI
+- AI：每天保留。
+- 宏观/政策：有重要变化才上。
+- 商业/科技：优先选产业变化。
+- 国际/社会：只选有长期影响的。
+- 消费/生活：偶尔补充，更接地气。

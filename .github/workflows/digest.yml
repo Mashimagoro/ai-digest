@@ -1,4 +1,4 @@
-name: AI Digest
+name: Daily Signals
 
 on:
   schedule:
@@ -33,6 +33,7 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
+          FORCE_REPROCESS: ${{ github.event_name == 'workflow_dispatch' && '1' || '' }}
         run: python main.py
 
       - name: Persist seen state

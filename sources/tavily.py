@@ -77,7 +77,7 @@ def _search(key: str, query: str, max_results: int, days: int, source: str) -> l
 
 
 def fetch(
-    queries: list[str],
+    queries: list,
     max_results: int = 5,
     days: int = 3,
     people: list[str] | None = None,
@@ -89,8 +89,23 @@ def fetch(
         return []
 
     items: list[dict] = []
-    for q in queries:
-        items += _search(key, q, max_results, days, "网络搜索 (Tavily)")
+    for spec in queries:
+        if isinstance(spec, dict):
+            q = spec.get("query", "")
+            section = spec.get("section")
+            source = spec.get("source", f"{section or '网络搜索'} (Tavily)")
+            limit = int(spec.get("max_results", max_results) or max_results)
+        else:
+            q = spec
+            section = None
+            source = "网络搜索 (Tavily)"
+            limit = max_results
+        if not q:
+            continue
+        hits = _search(key, q, limit, days, source)
+        if section:
+            hits = [{**h, "section": section} for h in hits]
+        items += hits
     for name in people or []:
         hits = _search(key, f'"{name}" AI', people_max_results, days, f"人物·{name} (Tavily)")
         # Tavily 对人名是模糊匹配，会拽进同名无关结果；只保留正文确实提到完整姓名的。
@@ -98,5 +113,5 @@ def fetch(
         kept = [h for h in hits if nl in f"{h['title']} {h['summary']}".lower()]
         if len(kept) < len(hits):
             print(f"    [人物·{name}] 过滤掉 {len(hits) - len(kept)} 条同名噪音")
-        items += kept
+        items += [{**h, "section": "AI"} for h in kept]
     return items

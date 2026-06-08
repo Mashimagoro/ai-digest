@@ -1,0 +1,20 @@
+name: Tests
+
+# 独立于每日简报：只跑单测，绝不发邮件 / 不触发 digest。
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+      - run: pip install -r requirements-dev.txt
+      - run: pytest -q

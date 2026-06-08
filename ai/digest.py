@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 
 from ai.client import generate
@@ -68,14 +69,21 @@ def _prompt(group: list[dict], priorities: list[str], cfg: dict) -> str:
         _prompt_item(i, it, cfg)
         for i, it in enumerate(group)
     )
-    prio = "\n".join(f"- {p}" for p in priorities) or "- AI 领域的重要进展"
-    return f"""你是一名 AI 领域资深编辑。请分析下面 {len(group)} 条内容，为每条返回 JSON。
+    prio = "\n".join(f"- {p}" for p in priorities) or "- 对普通朋友、创业者、职场人有长期影响的重要变化"
+    section_text = "\n".join(
+        f"- {rule['label']}：{rule.get('note', '')}"
+        for rule in section_rules(cfg)
+    )
+    return f"""你是一名“每日重要信号”编辑。请分析下面 {len(group)} 条内容，为每条返回 JSON。
 
 # 条目
 {items_text}
 
-# 用户关心的方向（据此打重要性分）
+# 用户关心的方向
 {prio}
+
+# 板块定义
+{section_text}
 
 # 信源和质检规则
 - 官方博客、研究原文、主流媒体、知名技术博客可给更高可信度。
@@ -84,11 +92,11 @@ def _prompt(group: list[dict], priorities: list[str], cfg: dict) -> str:
 - 如果来源偏弱但事件可能重要，降低 score，并在 credibility 写“待核”。
 
 # 要求
-- summary：用简体中文写 1-2 句话，说清楚这条讲了什么、为什么值得看。不要复述标题。
-- score：0-100 的重要性分。90+=必看的大新闻/突破，70-89=值得看，50-69=一般，<50=边角料。
+- summary：用简体中文写 1 句话说清楚事实。
+- score：0-100 的内部重要性分，用于排序即可。90+=必看的大新闻/突破，70-89=值得看，50-69=一般，<50=边角料。
 - reason：用 12-28 个中文字解释评分理由，例如“影响搜索入口和信息分发”。
 - credibility：从 高 / 中 / 待核 中选一个，表示信源可信度与核验状态。
-- topic：从中选一个简短主题标签：模型发布 / 研究论文 / 行业动态 / 工具开源 / 安全监管 / 观点访谈 / 其它。
+- topic：必须从这些板块中选一个：AI / 宏观/政策 / 商业/科技 / 国际/社会 / 消费/生活。
 
 严格按条目顺序返回：
 {{"analyses": [{{"score": <int>, "summary": "<中文>", "reason": "<中文>", "credibility": "高|中|待核", "topic": "<标签>"}}, ...]}}"""
@@ -98,6 +106,7 @@ def _prompt_item(i: int, it: dict, cfg: dict) -> str:
     source_quality = classify_source(it, cfg)
     return (
         f"条目 {i + 1}:\n标题: {it.get('title', '')}\n来源: {it.get('source', '')}\n"
+        f"默认板块: {it.get('section', '')}\n"
         f"域名: {source_quality.get('source_domain', '')}\n"
         f"信源等级: {source_quality.get('source_tier_label', '')}\n"
         f"摘要: {it.get('summary', '')[:600]}"
@@ -116,17 +125,19 @@ def dedupe_stories(items: list[dict], cfg: dict) -> list[dict]:
         f"{i + 1}. [{it.get('source', '')}] {it.get('title', '')}"
         for i, it in enumerate(items)
     )
-    result = generate(
-        f"""下面是今天的 AI 资讯条目。找出报道**同一件事/同一具体事件**的重复条目并分组。
+    prompt = f"""下面是今天的 AI 资讯条目。找出报道**同一件事/同一具体事件**的重复条目并分组。
 注意：是「同一事件的不同报道」才算重复，仅仅「同一主题」不算。
 
 {listing}
 
 返回 JSON: {{"groups": [[同一事件的条目编号(1基), ...], ...]}}。
-不确定就不要分组；独立事件无需列出。""",
-        model=cfg.get("ai", {}).get("model", "gemini-2.0-flash"),
-        rate_limit=cfg.get("ai", {}).get("rate_limit_seconds", 7.0),
-    )
+不确定就不要分组；独立事件无需列出。"""
+    model = cfg.get("ai", {}).get("model", "gemini-2.0-flash")
+    rate = cfg.get("ai", {}).get("rate_limit_seconds", 7.0)
+    result = generate(prompt, model=model, rate_limit=rate)
+    # 单次空返回（偶发 429/截断/解析失败）会让整轮去重失效，重试一次
+    if "groups" not in result:
+        result = generate(prompt, model=model, rate_limit=rate)
 
     drop: set[int] = set()
     for group in result.get("groups", []) or []:
@@ -141,71 +152,169 @@ def dedupe_stories(items: list[dict], cfg: dict) -> list[dict]:
     return [it for i, it in enumerate(items) if i not in drop]
 
 
+def _first_sentence(text: str) -> str:
+    positions = [text.find(c) for c in "。！？.!?" if text.find(c) != -1]
+    return text[: min(positions) + 1].strip() if positions else text.strip()
+
+
 def overview(items: list[dict], cfg: dict) -> str:
-    """让 AI 写一段当日总览（3 条以内要点）。失败返回空串。"""
+    """从已打分结果直接拼“今日要点”（分数最高的几条摘要首句），不再额外调用模型。
+
+    省掉一次串行的 Gemini 调用 + 7s 限速，降低逼近 Actions 超时的风险。
+    """
     if not cfg.get("digest", {}).get("write_overview", True):
         return ""
-    top = sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True)[:12]
-    listing = "\n".join(f"- [{i.get('ai_score')}] {i.get('title')} ({i.get('source')})" for i in top)
-    result = generate(
-        f"""下面是今天收集到的 AI 资讯标题（已按重要性排序）。
-用简体中文写一段不超过 3 条的「今日要点」，每条一句话，点出今天最值得关注的事。
-
-{listing}
-
-返回 JSON: {{"points": ["要点1", "要点2", "要点3"]}}""",
-        model=cfg.get("ai", {}).get("model", "gemini-2.0-flash"),
-        rate_limit=cfg.get("ai", {}).get("rate_limit_seconds", 7.0),
-    )
-    points = result.get("points", [])
+    top = sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True)[:3]
+    points = [
+        _first_sentence(s)
+        for it in top
+        if (s := (it.get("ai_summary") or "").strip())
+    ]
     return "\n".join(f"- {p}" for p in points)
 
 
-TOPIC_ORDER = [
-    "模型发布",
-    "研究论文",
-    "行业动态",
-    "工具开源",
-    "安全监管",
-    "观点访谈",
-    "其它",
+_TOKEN_LATIN = re.compile(r"[a-z0-9]+")
+_TOKEN_CJK = re.compile(r"[一-鿿]+")
+_STOP = {
+    "the", "a", "an", "to", "of", "for", "on", "in", "and", "is", "by", "at",
+    "as", "with", "are", "be", "this", "that", "from", "it", "its", "new", "ai",
+}
+
+
+def _title_tokens(title: str) -> set[str]:
+    # 去掉常见的“ - 来源名 / | 来源名”尾巴，避免来源名干扰比对
+    head = re.split(r"\s[-—|]\s", title.lower())[0]
+    toks = {t for t in _TOKEN_LATIN.findall(head) if len(t) > 1 and t not in _STOP}
+    for run in _TOKEN_CJK.findall(head):
+        if len(run) < 2:
+            toks.add(run)
+        else:
+            toks.update(run[i : i + 2] for i in range(len(run) - 1))  # CJK 字 bigram
+    return toks
+
+
+def dedupe_similar(items: list[dict], threshold: float = 0.65) -> list[dict]:
+    """标题近重复兜底（AI 同事件去重之外的防线）。
+
+    用 overlap 系数（交集 / 较短标题词数）判定“几乎同题”，阈值偏高，
+    主要拦截多源转载的近乎相同标题；跨源改写的同一事件仍主要靠 AI 去重。
+    保留分数更高的一条。
+    """
+    kept: list[dict] = []
+    kept_tokens: list[set[str]] = []
+    dropped = 0
+    for it in sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True):
+        toks = _title_tokens(it.get("title", ""))
+        is_dup = False
+        if len(toks) >= 4:
+            for ktoks in kept_tokens:
+                if len(ktoks) < 4:
+                    continue
+                if len(toks & ktoks) / min(len(toks), len(ktoks)) >= threshold:
+                    is_dup = True
+                    break
+        if is_dup:
+            dropped += 1
+            continue
+        kept.append(it)
+        kept_tokens.append(toks)
+    if dropped:
+        print(f"  [去重] 标题近重复，丢弃 {dropped} 条")
+    return kept
+
+
+DEFAULT_SECTIONS = [
+    {"label": "AI", "note": "每天保留", "max_items": 2},
+    {"label": "宏观/政策", "note": "有重要变化才上", "max_items": 2},
+    {"label": "商业/科技", "note": "优先选产业变化", "max_items": 2},
+    {"label": "国际/社会", "note": "只选有长期影响的", "max_items": 1},
+    {"label": "消费/生活", "note": "偶尔补充，更接地气", "max_items": 1},
 ]
+
+SECTION_ALIASES = {
+    "科技/ai": "AI",
+    "科技 / ai": "AI",
+    "人工智能": "AI",
+    "模型发布": "AI",
+    "研究论文": "AI",
+    "工具开源": "AI",
+    "安全监管": "AI",
+    "观点访谈": "AI",
+    "行业动态": "商业/科技",
+    "商业": "商业/科技",
+    "科技": "商业/科技",
+    "政策": "宏观/政策",
+    "宏观": "宏观/政策",
+    "国际": "国际/社会",
+    "社会": "国际/社会",
+    "消费": "消费/生活",
+    "生活": "消费/生活",
+}
+
+
+def section_rules(cfg: dict) -> list[dict]:
+    rules = cfg.get("digest", {}).get("sections") or DEFAULT_SECTIONS
+    normalized: list[dict] = []
+    for rule in rules:
+        label = str(rule.get("label", "")).strip()
+        if not label:
+            continue
+        normalized.append(
+            {
+                "label": label,
+                "note": str(rule.get("note", "")).strip(),
+                "max_items": int(rule.get("max_items", 2) or 2),
+            }
+        )
+    return normalized
+
+
+def _section_label(item: dict) -> str:
+    raw = str(item.get("ai_topic") or item.get("section") or "其它").strip()
+    return SECTION_ALIASES.get(raw.lower(), raw)
+
+
+def _section_heading(section: dict) -> str:
+    return f'{section["label"]}｜{section["note"]}' if section.get("note") else section["label"]
+
+
+def sectionize(items: list[dict], cfg: dict) -> list[dict]:
+    """按编辑板块排序和限量；没有内容的板块不硬凑。"""
+    ranked = sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True)
+    out: list[dict] = []
+    for rule in section_rules(cfg):
+        label = rule["label"]
+        group = [it for it in ranked if _section_label(it) == label]
+        if not group:
+            continue
+        out.append({**rule, "items": group[: rule["max_items"]]})
+    return out
 
 
 def build_markdown(items: list[dict], cfg: dict, intro: str = "") -> str:
     """组装最终 Markdown 简报。"""
     today = datetime.now(timezone.utc).astimezone().strftime("%Y-%m-%d")
-    top_n = cfg.get("digest", {}).get("top_n", 8)
-    ranked = sorted(items, key=lambda x: x.get("ai_score", 0), reverse=True)
+    title = cfg.get("digest", {}).get("subject_prefix", "今日重要信号")
+    sections = sectionize(items, cfg)
+    included_count = sum(len(section["items"]) for section in sections)
 
-    lines = [f"# AI 速览 · {today}", "", f"今天共收集 **{len(items)}** 条更新。", ""]
+    lines = [
+        f"# {title} · {today}",
+        "",
+        f"AI 筛选整理，共入选 **{included_count}** 条重要信号。",
+        "",
+    ]
 
     if intro:
-        lines += ["## 今日要点", "", intro, ""]
+        lines += ["## 今日判断", "", intro, ""]
 
-    lines += ["## 重点条目", ""]
-    for it in ranked[:top_n]:
-        lines.append(_render_item(it))
-    lines.append("")
+    for section in sections:
+        lines += [f"## {_section_heading(section)}", ""]
+        for it in section["items"]:
+            lines.append(_render_item(it))
+        lines.append("")
 
-    # 其余按主题分组
-    rest = ranked[top_n:]
-    if rest:
-        lines += ["## 更多更新", ""]
-        by_topic: dict[str, list[dict]] = {}
-        for it in rest:
-            by_topic.setdefault(it.get("ai_topic", "其它"), []).append(it)
-        for topic in TOPIC_ORDER:
-            group = by_topic.get(topic)
-            if not group:
-                continue
-            lines.append(f"### {topic}")
-            lines.append("")
-            for it in group:
-                lines.append(_render_item(it, compact=True))
-            lines.append("")
-
-    lines += ["---", "", "*由 AI Digest 自动生成。修改信源请编辑 config.yaml。*"]
+    lines += ["---", "", "*由「今日重要信号」自动生成。修改信源请编辑 config.yaml。*"]
     return "\n".join(lines)
 
 
@@ -226,5 +335,5 @@ def _render_item(it: dict, compact: bool = False) -> str:
     if qa_notes:
         extra += f"  \n  质检：{'；'.join(qa_notes)}"
     if compact:
-        return f"- **[{title}]({url})** · {source} `{score}`  \n  {summary}{extra}"
-    return f"### [{title}]({url})\n\n`重要性 {score}` · {source}\n\n{summary}{extra}\n"
+        return f"- **[{title}]({url})** · {source}  \n  {summary}{extra}"
+    return f"### [{title}]({url})\n\n{source}\n\n{summary}{extra}\n"
