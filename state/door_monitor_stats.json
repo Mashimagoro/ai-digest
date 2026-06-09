@@ -9,7 +9,19 @@
       "stored": 2,
       "sync_state": "idle",
       "synced": 2
+    },
+    "2026-06-08": {
+      "date": "2026-06-08",
+      "deleted_local": 0,
+      "generated_at": "2026-06-09T20:10:03+08:00",
+      "last_synced_at": "2026-06-09T15:28:48+08:00",
+      "local_present": 144,
+      "remote_present": 144,
+      "remote_state": "syncthing_status",
+      "stored": 144,
+      "sync_state": "idle",
+      "synced": 144
     }
   },
-  "updated_at": "2026-06-05T00:53:55+08:00"
+  "updated_at": "2026-06-09T20:10:03+08:00"
 }
