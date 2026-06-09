@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>AI 速览 · 2026-06-09</title>
+<title>今日重要信号 · 2026-06-09</title>
 <style>
 :root{
   --bg:#030712; --panel:rgba(8,15,30,.72); --panel-strong:rgba(9,16,31,.92);
@@ -51,13 +51,15 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
 .nav-pill{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:8px;
   border:1px solid rgba(226,246,255,.22);border-radius:16px;background:rgba(12,20,35,.66);
   box-shadow:0 8px 36px rgba(0,0,0,.35),0 0 24px rgba(34,211,238,.12) inset;backdrop-filter:blur(18px)}
-.nav-pill span{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
-  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035)}
+.nav-pill span,.nav-pill a{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
+  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
+  text-decoration:none;transition:color .15s,border-color .15s}
+.nav-pill a:hover{color:var(--accent);border-color:var(--line-strong)}
 .nav-pill .nav-mark{font-weight:900;color:#061018;background:linear-gradient(135deg,var(--accent),var(--signal));
   box-shadow:0 0 18px rgba(34,242,181,.3)}
 .eyebrow{position:relative;z-index:2;margin:86px 0 6px;color:var(--accent);font-size:.78rem;
   text-transform:uppercase;letter-spacing:.16em;font-weight:800}
-.hero-title{position:relative;z-index:2;margin:0;font-size:clamp(4rem,12vw,9.2rem);line-height:.92;
+.hero-title{position:relative;z-index:2;margin:0;font-size:5.8rem;line-height:1.02;
   letter-spacing:0;font-weight:950;color:#fff;text-shadow:0 0 28px rgba(87,229,255,.28),0 8px 32px rgba(0,0,0,.8)}
 .hero-subtitle{position:relative;z-index:2;max-width:620px;margin:24px auto 0;color:#d8ebff;font-size:.92rem;
   text-shadow:0 0 16px rgba(87,229,255,.28)}
@@ -65,8 +67,14 @@ body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
   border-radius:16px;background:rgba(6,13,28,.48);box-shadow:0 14px 38px rgba(0,0,0,.36),0 0 34px rgba(34,211,238,.1) inset;
   backdrop-filter:blur(16px);text-align:left;color:var(--muted)}
 .hero-panel span{display:block;margin-bottom:14px;color:#dff7ff;font-size:.76rem}
-.hero-panel b{display:block;margin:7px 0;padding:6px 8px;border-radius:8px;border:1px solid rgba(186,230,253,.16);
-  color:#d8e6f7;font-size:.68rem;font-weight:600;background:rgba(255,255,255,.035)}
+.hero-panel p{margin:7px 0;color:#d8e6f7;font-size:.7rem;line-height:1.45}
+.hero-panel .filt{display:block;width:100%;margin:7px 0;padding:6px 8px;border-radius:8px;
+  border:1px solid rgba(186,230,253,.16);color:#d8e6f7;font-size:.68rem;font-weight:600;
+  background:rgba(255,255,255,.035);text-align:left;cursor:pointer;font-family:inherit;
+  transition:border-color .15s,background .15s,color .15s}
+.hero-panel .filt:hover{border-color:var(--line-strong);color:#fff}
+.hero-panel .filt.active{border-color:var(--accent);color:#061018;
+  background:linear-gradient(135deg,var(--accent),var(--signal));font-weight:800}
 .hero-panel--left{left:7%;top:295px}
 .hero-panel--right{right:7%;top:350px}
 main{max-width:var(--maxw);margin:0 auto;padding:34px 26px 64px}
@@ -129,13 +137,14 @@ section:first-child h2{margin-top:0}
   .site-head{min-height:430px}
   .hero-panel{display:none}
   .eyebrow{margin-top:62px}
+  .hero-title{font-size:3.4rem}
 }
 @media(max-width:520px){
   .nav-pill{max-width:100%;overflow:auto;scrollbar-width:none}
   .nav-pill::-webkit-scrollbar{display:none}
   .nav-pill span{white-space:nowrap}
   .site-head{min-height:380px;padding:22px 16px 30px}
-  .hero-title{font-size:3.6rem}
+  .hero-title{font-size:2.7rem}
   .hero-subtitle{font-size:.82rem}
   main{padding:22px 16px 52px}
   .card{padding:14px}
@@ -148,292 +157,144 @@ section:first-child h2{margin-top:0}
 <div class="stage">
   <header class="site-head">
     <div class="nav-pill">
-      <span class="nav-mark">AI</span>
-      <span>Digest</span>
-      <span>Signals</span>
-      <span>Sources</span>
-      <span>History</span>
+      <a class="nav-mark" href="#top">信号</a>
+      <a href="#top">本期</a>
+      <a href="#sections">板块</a>
+      <a href="#history">历史</a>
     </div>
-    <div class="hero-panel hero-panel--left">
-      <span>Impact Levels</span>
-      <b>High Impact</b>
-      <b>Medium Impact</b>
-      <b>Watchlist</b>
+    <div class="hero-panel hero-panel--left" id="sections">
+      <span>固定板块</span>
+      <p>AI 每天保留</p>
+      <p>宏观/政策 有变化才上</p>
+      <p>商业/科技 看产业变化</p>
     </div>
     <div class="hero-panel hero-panel--right">
-      <span>Confidence</span>
-      <b>Official</b>
-      <b>Verified</b>
-      <b>Pending</b>
+      <span>入选原则</span>
+      <p>官方与高质量媒体优先</p>
+      <p>不硬凑板块</p>
+      <p>每条只保留一句影响</p>
     </div>
     <div class="beam" aria-hidden="true"></div>
-    <p class="eyebrow">Daily AI Signal Brief</p>
-    <h1 class="hero-title">AI INSIGHTS</h1>
-    <p class="hero-subtitle">AI 速览 · 2026-06-09 · YouTube · 新闻 · Newsletter · 人物动态</p>
+    <p class="eyebrow">AI-curated Daily Brief</p>
+    <h1 class="hero-title">今日重要信号</h1>
+    <p class="hero-subtitle">今日重要信号 · 2026-06-09 · AI 筛选整理 · 高质量信源优先</p>
   </header>
-  <main>
+  <main id="top">
     <a class="home" href="../index.html">← 返回首页</a>
     <div class="layout">
-      <div class="content"><section class="overview"><h2>今日要点</h2><ul><li>OpenAI正式启动IPO进程，并计划对ChatGPT进行重大架构调整以开启“第三阶段”。</li><li>AI设计的新型通用冠状病毒疫苗成功通过人体试验，标志着AI在医疗领域的重大突破。</li><li>苹果发布新一代Apple Intelligence及Siri AI功能，并致力于通过AI优化Safari浏览器体验。</li></ul></section>
-<section><h2>重点条目</h2>
-<article class="card">
+      <div class="content"><section class="overview"><h2>今日判断</h2><ul><li>苹果在WWDC大会上发布新一代Apple Intelligence和全新Siri AI，使其更智能、更个性化。</li><li>OpenAI 已秘密提交 IPO 申请，正式开启与 Anthropic 的资本市场竞速。</li><li>OpenAI计划上市，加剧与Anthropic的投资竞争。</li></ul></section>
+<section><h2>AI｜每天保留</h2>
+<article class="card" data-band="high" data-conf="verified">
   <div class="card-head">
     <div class="meta">
       <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">行业动态</span>
+      <span class="chip chip--topic">AI</span>
       <span class="chip chip--quality">高可信来源</span>
     </div>
-    <span class="badge s-high">95</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/ai-artificial-intelligence/946335/openai-ipo-s-1-confidential" target="_blank" rel="noopener">OpenAI files for IPO, following Anthropic</a></h3>
-  <p class="summary">OpenAI 已向 SEC 秘密提交 Form S-1 文件，正式启动 IPO 进程，标志着 AI 行业进入资本市场新阶段。</p>
-  <p class="reason"><strong>为什么重要：</strong>头部 AI 公司的上市进程将深刻影响全球资本市场与 AI 行业格局。</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">人物·Sam Altman (Tavily)</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">高可信来源</span>
-      <span class="chip chip--domain">businessinsider.com</span>
-    </div>
-    <span class="badge s-high">92</span>
-  </div>
-  <h3 class="title"><a href="https://www.businessinsider.com/sam-altman-openai-third-phase-plan-2026-6" target="_blank" rel="noopener">Read Sam Altman&#x27;s plan for OpenAI as it enters its &#x27;third phase&#x27; - Business Insider</a></h3>
-  <p class="summary">OpenAI正式宣布进入“第三阶段”，核心目标是实现AI的普惠、易用与安全。这是公司战略演进的重要里程碑。</p>
-  <p class="reason"><strong>为什么重要：</strong>OpenAI核心战略调整，直接影响行业发展方向，具备极高参考价值。</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">ndtv.com</span>
-    </div>
-    <span class="badge s-high">89</span>
-  </div>
-  <h3 class="title"><a href="https://www.ndtv.com/health/breakthrough-universal-coronavirus-vaccine-designed-by-ai-passes-human-trial-11602079" target="_blank" rel="noopener">Breakthrough: Universal Coronavirus Vaccine Designed By AI Passes Human Trial - NDTV</a></h3>
-  <p class="summary">人工智能设计的通用冠状病毒疫苗成功通过人体临床试验，标志着AI在药物研发领域实现里程碑式突破，展示了其在公共卫生中的巨大潜力。</p>
-  <p class="reason"><strong>为什么重要：</strong>AI在药物研发领域取得重大突破，具深远影响。</p>
-  <p class="qa"><strong>质检：</strong>来源等级为“普通来源”，高分封顶为 89；90+ 条目需要官方、主流媒体、研究原文或多源交叉验证</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-high">88</span>
   </div>
   <h3 class="title"><a href="https://www.theverge.com/tech/942416/apple-siri-ai-update-wwdc" target="_blank" rel="noopener">Apple announces Siri AI and its next generation of Apple Intelligence</a></h3>
-  <p class="summary">苹果正式发布新一代 Apple Intelligence 与 Siri AI，强调更强的对话能力与个性化体验。</p>
-  <p class="reason"><strong>为什么重要：</strong>苹果核心 AI 战略的重大更新，直接影响数亿用户的终端交互体验。</p>
+  <p class="summary">苹果在WWDC大会上发布新一代Apple Intelligence和全新Siri AI，使其更智能、更个性化。</p>
+  <p class="reason"><strong>为什么重要：</strong>苹果发布核心AI战略和产品，影响数亿用户体验。</p>
 </article>
-<article class="card">
+<article class="card" data-band="high" data-conf="verified">
   <div class="card-head">
     <div class="meta">
-      <span class="chip chip--src">人物·Dario Amodei (Tavily)</span>
-      <span class="chip chip--topic">观点访谈</span>
-      <span class="chip chip--quality">高可信来源</span>
-      <span class="chip chip--domain">washingtonpost.com</span>
-    </div>
-    <span class="badge s-high">88</span>
-  </div>
-  <h3 class="title"><a href="https://www.washingtonpost.com/opinions/2026/06/08/anthropic-ai-powerful-company/" target="_blank" rel="noopener">Opinion | Anthropic might be the most powerful company in the world - The Washington Post</a></h3>
-  <p class="summary">分析了Anthropic在AI领域的统治力及其即将上市的动态。探讨了其作为万亿级企业的潜在影响力。</p>
-  <p class="reason"><strong>为什么重要：</strong>深度分析了头部AI厂商的商业动向与行业地位，具有很强的战略参考性。</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">工具开源</span>
+      <span class="chip chip--src">TechCrunch AI</span>
+      <span class="chip chip--topic">AI</span>
       <span class="chip chip--quality">高可信来源</span>
     </div>
-    <span class="badge s-high">85</span>
   </div>
-  <h3 class="title"><a href="https://www.theverge.com/tech/944325/google-notebooklm-ai-gemini-update" target="_blank" rel="noopener">NotebookLM’s Gemini 3.5 upgrade adds a cloud computer and help finding sources</a></h3>
-  <p class="summary">Google NotebookLM 升级至 Gemini 3.5 模型，并引入云端计算与更精准的溯源功能，提升了 AI 辅助研究的实用性。</p>
-  <p class="reason"><strong>为什么重要：</strong>主流 AI 工具的重大模型升级，直接影响生产力工具的效能。</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">安全监管</span>
-      <span class="chip chip--quality">高可信来源</span>
-      <span class="chip chip--domain">axios.com</span>
-    </div>
-    <span class="badge s-high">85</span>
-  </div>
-  <h3 class="title"><a href="https://www.axios.com/2026/06/08/axios-ainy-summit-startups-fear-new-ai-rules-will-entrench-big-tech-and-crush-small-competitors" target="_blank" rel="noopener">Axios AI+NY Summit: Startups fear new AI rules will entrench big tech and crush small competitors - Axios</a></h3>
-  <p class="summary">Axios峰会上，初创公司担忧新的AI法规可能巩固大型科技公司的地位并扼杀小型竞争者，呼吁关注法规对行业竞争格局的影响。</p>
-  <p class="reason"><strong>为什么重要：</strong>揭示AI监管对初创企业的潜在负面影响，值得关注。</p>
-</article>
-<article class="card">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">人物·Andrej Karpathy (Tavily)</span>
-      <span class="chip chip--topic">安全监管</span>
-      <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">securityweek.com</span>
-    </div>
-    <span class="badge s-mid">82</span>
-  </div>
-  <h3 class="title"><a href="https://www.securityweek.com/everybody-is-vibe-coding-but-nobody-told-the-security-team/amp/" target="_blank" rel="noopener">Everybody Is Vibe Coding But Nobody Told the Security Team - SecurityWeek</a></h3>
-  <p class="summary">探讨了AI辅助编程带来的“Vibe Coding”现象及其潜在的安全隐患。强调了快速开发与代码安全性之间的矛盾。</p>
-  <p class="reason"><strong>为什么重要：</strong>揭示了AI编程工具普及后的安全盲区，对开发者具有警示意义。</p>
+  <h3 class="title"><a href="https://techcrunch.com/2026/06/08/following-anthropic-openai-files-confidentially-for-ipo/" target="_blank" rel="noopener">OpenAI files confidentially for IPO, following Anthropic</a></h3>
+  <p class="summary">OpenAI 已秘密提交 IPO 申请，正式开启与 Anthropic 的资本市场竞速。</p>
+  <p class="reason"><strong>为什么重要：</strong>AI 行业领头羊上市将重塑资本格局与行业竞争规则。</p>
 </article>
 </section>
-<section class="more"><h2>更多更新</h2>
-<h3 class="topic-h">模型发布</h3>
-<article class="card card--compact">
+<section><h2>宏观/政策｜有重要变化才上</h2>
+<article class="card" data-band="high" data-conf="official">
   <div class="card-head">
     <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">模型发布</span>
+      <span class="chip chip--src">SEC Press Releases</span>
+      <span class="chip chip--topic">宏观/政策</span>
+      <span class="chip chip--quality">官方/一手</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.sec.gov/newsroom/press-releases/2026-53-sec-establishes-joint-data-standards-required-under-financial-data-transparency-act-2022" target="_blank" rel="noopener">SEC Establishes Joint Data Standards as Required Under the Financial Data Transparency Act of 2022</a></h3>
+  <p class="summary">美国SEC根据2022年金融数据透明法案制定了联合数据标准。</p>
+  <p class="reason"><strong>为什么重要：</strong>SEC制定金融数据标准，影响行业规则。</p>
+</article>
+<article class="card" data-band="high" data-conf="official">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">European Central Bank</span>
+      <span class="chip chip--topic">宏观/政策</span>
+      <span class="chip chip--quality">官方/一手</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.ecb.europa.eu//press/pr/date/2026/html/ecb.pr260608~6766ec7154.en.html" target="_blank" rel="noopener">ECB announces main milestones for roll-out of Integrated Reporting Framework</a></h3>
+  <p class="summary">欧洲央行公布了综合报告框架的推出里程碑。</p>
+  <p class="reason"><strong>为什么重要：</strong>欧洲央行推出报告框架，影响金融监管。</p>
+</article>
+</section>
+<section><h2>商业/科技｜优先选产业变化</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">BBC Business</span>
+      <span class="chip chip--topic">商业/科技</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.bbc.com/news/articles/cy8d9e4lzv1o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">SpaceX&#x27;s stock market blast-off could be Musk&#x27;s biggest gamble yet</a></h3>
+  <p class="summary">SpaceX 计划上市，此举或将重塑资本市场格局并显著影响马斯克的个人财富。</p>
+  <p class="reason"><strong>为什么重要：</strong>作为全球航天龙头，其上市进程对资本市场及商业航天领域影响深远。</p>
+</article>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">AI 高可信媒体补源 (Tavily)</span>
+      <span class="chip chip--topic">商业/科技</span>
+      <span class="chip chip--quality">高可信来源</span>
+      <span class="chip chip--domain">bloomberg.com</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.bloomberg.com/news/articles/2026-06-07/nvidia-sk-hynix-sign-multi-year-pact-to-develop-next-gen-chips" target="_blank" rel="noopener">Nvidia, SK Hynix Sign Multi-Year Pact to Develop Next-Gen Chips - Bloomberg.com</a></h3>
+  <p class="summary">NVIDIA 与 SK 海力士签署多年协议，深化在 AI 芯片设计与制造领域的合作。</p>
+  <p class="reason"><strong>为什么重要：</strong>主流媒体对关键产业链合作的深度报道，确认了行业趋势。</p>
+</article>
+</section>
+<section><h2>国际/社会｜只选有长期影响的</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">NYT World</span>
+      <span class="chip chip--topic">国际/社会</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.nytimes.com/live/2026/06/08/world/iran-israel-lebanon-attacks" target="_blank" rel="noopener">Live Updates: Israel Halts Iran Strikes After Trump Claims Progress Toward Nuclear Talks, Officials Say</a></h3>
+  <p class="summary">以色列在与特朗普通话后暂停对伊朗的打击，伊朗亦表示暂停攻击，中东局势迎来关键转折。</p>
+  <p class="reason"><strong>为什么重要：</strong>地缘政治重大突发，直接影响全球能源市场及国际安全预期。</p>
+</article>
+</section>
+<section><h2>消费/生活｜偶尔补充，更接地气</h2>
+<article class="card" data-band="mid" data-conf="pending">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">消费生活补源 (Tavily)</span>
+      <span class="chip chip--topic">消费/生活</span>
       <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">pcmag.com</span>
+      <span class="chip chip--domain">skift.com</span>
     </div>
-    <span class="badge s-mid">75</span>
   </div>
-  <h3 class="title"><a href="https://www.pcmag.com/news/i-tested-all-4-of-microsofts-new-ai-models-heres-the-brutal-truth" target="_blank" rel="noopener">I Tested All 4 of Microsoft&#x27;s New AI Models. Here&#x27;s the Brutal Truth - PCMag</a></h3>
-  <p class="summary">微软在Build 2026发布了涵盖图像、推理及语音的四款新模型。测评揭示了这些模型在实际应用中的真实表现。</p>
-</article>
-<h3 class="topic-h">行业动态</h3>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-mid">80</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/tech/944099/wwdc-2026-how-to-watch" target="_blank" rel="noopener">WWDC 2026: How to watch and what to expect</a></h3>
-  <p class="summary">苹果 WWDC 2026 即将召开，预计将发布 iOS 等系统的重大更新，特别是 Siri 的 AI 能力重构备受关注。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">Ars Technica AI</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-mid">78</span>
-  </div>
-  <h3 class="title"><a href="https://arstechnica.com/ai/2026/06/chat-is-dead-openai-preps-overhaul-of-chatgpt/" target="_blank" rel="noopener">&quot;Chat is dead&quot;: OpenAI preps overhaul of ChatGPT</a></h3>
-  <p class="summary">OpenAI计划重塑ChatGPT的定位，将其作为通往高利润产品的途径，以应对市场变化并为潜在的IPO做准备。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-ok">60</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/news/945905/amazon-alexa-shopping-ai-generated-custom-merch-design-printing" target="_blank" rel="noopener">Amazon is launching AI-generated custom merch</a></h3>
-  <p class="summary">亚马逊推出 AI 生成定制商品功能，用户可通过 Alexa 文本指令设计并销售个性化周边产品。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">行业动态</span>
-      <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">zamin.uz</span>
-    </div>
-    <span class="badge s-ok">55</span>
-  </div>
-  <h3 class="title"><a href="https://zamin.uz/en/technology/205840-notion-restores-access-to-anthropic-models-after-technical-glitch.html" target="_blank" rel="noopener">Notion Restores Access to Anthropic Models After Technical Glitch - Zamin.uz</a></h3>
-  <p class="summary">Notion因技术故障暂时下架Anthropic模型，现已恢复正常。此事件反映了AI集成在生产力工具中的稳定性挑战。</p>
-</article>
-<h3 class="topic-h">工具开源</h3>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">工具开源</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-mid">75</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/tech/946345/apple-safari-ai-update-extensions" target="_blank" rel="noopener">Apple is using AI to fix Safari’s extension problem</a></h3>
-  <p class="summary">苹果利用 AI 技术简化 Safari 扩展开发流程，允许用户通过自然语言生成代码来创建自定义扩展。</p>
-</article>
-<h3 class="topic-h">安全监管</h3>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">Ars Technica AI</span>
-      <span class="chip chip--topic">安全监管</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-mid">80</span>
-  </div>
-  <h3 class="title"><a href="https://arstechnica.com/security/2026/06/for-the-2nd-time-in-weeks-microsoft-packages-laced-with-credential-stealer/" target="_blank" rel="noopener">For the 2nd time in weeks, Microsoft packages laced with credential stealer</a></h3>
-  <p class="summary">这条新闻揭示了AI供应链中存在的严重安全漏洞，恶意软件包伪装成微软产品窃取凭证，对AI系统安全构成直接威胁。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">安全监管</span>
-      <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">cyberscoop.com</span>
-    </div>
-    <span class="badge s-mid">75</span>
-  </div>
-  <h3 class="title"><a href="https://cyberscoop.com/ai-security-regulation-accountability-op-ed/" target="_blank" rel="noopener">The AI security race needs accountability, not overregulation - CyberScoop</a></h3>
-  <p class="summary">文章认为AI安全竞赛应侧重问责制而非过度监管，呼吁政策制定者与科技公司建立伙伴关系，以平衡创新与社会责任。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">网络搜索 (Tavily)</span>
-      <span class="chip chip--topic">安全监管</span>
-      <span class="chip chip--quality">普通来源</span>
-      <span class="chip chip--domain">abovethelaw.com</span>
-    </div>
-    <span class="badge s-mid">72</span>
-  </div>
-  <h3 class="title"><a href="https://abovethelaw.com/2026/06/ai-governance-isnt-failing-its-just-in-the-wrong-place/" target="_blank" rel="noopener">AI Governance Isn’t Failing. It’s Just In The Wrong Place. - Above the Law</a></h3>
-  <p class="summary">文章指出当前AI治理的讨论焦点有误，认为真正的决策发生在组织内部而非政策文件，呼吁重新审视AI治理的有效路径。</p>
-</article>
-<h3 class="topic-h">观点访谈</h3>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">The Verge AI</span>
-      <span class="chip chip--topic">观点访谈</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-mid">75</span>
-  </div>
-  <h3 class="title"><a href="https://www.theverge.com/podcast/944138/microsoft-ai-ceo-mustafa-suleyman-superintelligence-agi-openai-automation" target="_blank" rel="noopener">Microsoft’s AI chief says superintelligence is near, but won’t take your job</a></h3>
-  <p class="summary">微软 AI CEO Mustafa Suleyman 探讨了超级智能的未来前景，并就 AI 对就业市场的影响给出了行业视角的解读。</p>
-</article>
-<article class="card card--compact">
-  <div class="card-head">
-    <div class="meta">
-      <span class="chip chip--src">Ars Technica AI</span>
-      <span class="chip chip--topic">观点访谈</span>
-      <span class="chip chip--quality">高可信来源</span>
-    </div>
-    <span class="badge s-ok">65</span>
-  </div>
-  <h3 class="title"><a href="https://arstechnica.com/science/2026/06/the-weather-and-climate-science-ai-revolution-isnt-revolutionary/" target="_blank" rel="noopener">The weather and climate science AI revolution isn’t revolutionary</a></h3>
-  <p class="summary">这篇文章探讨了机器学习在天气和气候科学中的应用局限性，并分析了其当前的使用方式，对AI在特定领域的实际效用提供了冷静视角。</p>
+  <h3 class="title"><a href="https://skift.com/2026/06/08/global-travel-growth-has-turned-negative-for-first-time-this-year/" target="_blank" rel="noopener">Global Travel Growth Has Turned Negative for First Time This Year - Skift</a></h3>
+  <p class="summary">Skift旅游健康指数今年首次跌破100，显示全球旅游增长出现负增长。</p>
+  <p class="reason"><strong>为什么重要：</strong>旅游业增长放缓是全球消费疲软和经济预期的重要信号。</p>
 </article>
 </section></div>
-      <aside class="history"><h2>历史简报</h2><ol><li><a href="2026-06-09.html">2026-06-09</a></li><li><a href="2026-06-08.html">2026-06-08</a></li><li><a href="2026-06-07.html">2026-06-07</a></li><li><a href="2026-06-06.html">2026-06-06</a></li><li><a href="2026-06-05.html">2026-06-05</a></li><li><a href="2026-06-04.html">2026-06-04</a></li><li><a href="2026-06-03.html">2026-06-03</a></li><li><a href="2026-06-02.html">2026-06-02</a></li><li><a href="2026-06-01.html">2026-06-01</a></li><li><a href="2026-05-31.html">2026-05-31</a></li><li><a href="2026-05-30.html">2026-05-30</a></li><li><a href="2026-05-29.html">2026-05-29</a></li><li><a href="2026-05-28.html">2026-05-28</a></li><li><a href="2026-05-27.html">2026-05-27</a></li><li><a href="2026-05-26.html">2026-05-26</a></li><li><a href="2026-05-25.html">2026-05-25</a></li></ol></aside>
+      <aside class="history" id="history"><h2>历史简报</h2><ol><li><a href="2026-06-09.html">2026-06-09</a></li><li><a href="2026-06-08.html">2026-06-08</a></li><li><a href="2026-06-07.html">2026-06-07</a></li><li><a href="2026-06-06.html">2026-06-06</a></li><li><a href="2026-06-05.html">2026-06-05</a></li><li><a href="2026-06-04.html">2026-06-04</a></li><li><a href="2026-06-03.html">2026-06-03</a></li><li><a href="2026-06-02.html">2026-06-02</a></li><li><a href="2026-06-01.html">2026-06-01</a></li><li><a href="2026-05-31.html">2026-05-31</a></li><li><a href="2026-05-30.html">2026-05-30</a></li><li><a href="2026-05-29.html">2026-05-29</a></li><li><a href="2026-05-28.html">2026-05-28</a></li><li><a href="2026-05-27.html">2026-05-27</a></li><li><a href="2026-05-26.html">2026-05-26</a></li><li><a href="2026-05-25.html">2026-05-25</a></li></ol></aside>
     </div>
   </main>
 </div>
-<footer class="site-foot">由 AI Digest 自动生成 · 信源配置见仓库 config.yaml</footer>
+<footer class="site-foot">由「今日重要信号」自动生成 · 信源配置见仓库 config.yaml</footer>
 </body>
 </html>
