@@ -66,10 +66,22 @@ rss:
     url: "https://www.ecb.europa.eu/rss/press.html"
     section: "宏观/政策"
     max_items: 5
+  - name: "BIS Press Releases"
+    url: "https://www.bis.org/doclist/all_pressrels.rss"
+    section: "宏观/政策"
+    max_items: 5
+  - name: "BIS Statistical Releases"
+    url: "https://www.bis.org/doclist/all_statistics.rss"
+    section: "宏观/政策"
+    max_items: 4
+  - name: "EIA Today in Energy"
+    url: "https://www.eia.gov/rss/todayinenergy.xml"
+    section: "宏观/政策"
+    max_items: 4
   - name: "BBC Business"
     url: "https://feeds.bbci.co.uk/news/business/rss.xml"
     section: "宏观/政策"
-    max_items: 8
+    max_items: 5
 
   # 商业/科技：优先选产业变化
   - name: "TechCrunch"
@@ -84,6 +96,18 @@ rss:
     url: "https://rss.nytimes.com/services/xml/rss/nyt/Technology.xml"
     section: "商业/科技"
     max_items: 8
+  - name: "The Register"
+    url: "https://www.theregister.com/headlines.atom"
+    section: "商业/科技"
+    max_items: 6
+  - name: "Wired Business"
+    url: "https://www.wired.com/feed/category/business/latest/rss"
+    section: "商业/科技"
+    max_items: 5
+  - name: "Nikkei Asia"
+    url: "https://asia.nikkei.com/rss/feed/nar"
+    section: "商业/科技"
+    max_items: 6
   - name: "36氪"
     url: "https://36kr.com/feed"
     section: "商业/科技"
@@ -110,6 +134,10 @@ rss:
     url: "https://www.who.int/rss-feeds/news-english.xml"
     section: "国际/社会"
     max_items: 5
+  - name: "UN News"
+    url: "https://news.un.org/feed/subscribe/en/news/all/rss.xml"
+    section: "国际/社会"
+    max_items: 6
 
   # 消费/生活：偶尔补充，更接地气
   - name: "BBC Technology"
@@ -120,6 +148,18 @@ rss:
     url: "https://www.theguardian.com/technology/rss"
     section: "消费/生活"
     max_items: 6
+  - name: "Skift"
+    url: "https://skift.com/feed/"
+    section: "消费/生活"
+    max_items: 5
+  - name: "NPR Health"
+    url: "https://feeds.npr.org/1128/rss.xml"
+    section: "消费/生活"
+    max_items: 5
+  - name: "NPR Education"
+    url: "https://feeds.npr.org/1013/rss.xml"
+    section: "消费/生活"
+    max_items: 5
 
 # ---- Tavily 网页新闻搜索（补固定 RSS 之外的大新闻；需要 TAVILY_API_KEY） ----
 tavily:
@@ -136,21 +176,43 @@ tavily:
     - query: "site:gov.cn OR site:pbc.gov.cn OR site:stats.gov.cn 中国 重要 政策 宏观 经济"
       section: "宏观/政策"
       source: "中国政策补源 (Tavily)"
+      max_results: 5
     - query: "Reuters Bloomberg Financial Times central bank inflation trade fiscal policy latest"
       section: "宏观/政策"
       source: "宏观高可信媒体补源 (Tavily)"
+      max_results: 5
+    - query: "site:imf.org/en/News OR site:worldbank.org/en/news OR site:wto.org trade debt inflation energy food security emerging markets latest"
+      section: "宏观/政策"
+      source: "国际宏观机构补源 (Tavily)"
+      max_results: 5
     - query: "Reuters Bloomberg Financial Times major company earnings acquisition layoffs semiconductor cloud AI latest"
       section: "商业/科技"
       source: "商业科技补源 (Tavily)"
-    - query: "site:latepost.com OR site:caixin.com OR site:jiemian.com 科技 公司 产业 资本"
+      max_results: 5
+    - query: "site:reuters.com/technology OR site:bloomberg.com/technology OR site:ft.com/technology OR site:theinformation.com IPO acquisition cloud chip semiconductor software earnings latest"
+      section: "商业/科技"
+      source: "英文产业变化补源 (Tavily)"
+      max_results: 5
+    - query: "site:latepost.com OR site:caixin.com OR site:jiemian.com OR site:yicai.com OR site:21jingji.com 科技 公司 产业 资本 并购 财报"
       section: "商业/科技"
       source: "中文商业科技补源 (Tavily)"
+      max_results: 5
     - query: "Reuters AP BBC long term impact world policy society conflict climate health latest"
       section: "国际/社会"
       source: "国际社会补源 (Tavily)"
+      max_results: 5
+    - query: "site:un.org OR site:who.int OR site:worldbank.org conflict climate migration public health food security long term impact latest"
+      section: "国际/社会"
+      source: "国际机构补源 (Tavily)"
+      max_results: 5
     - query: "consumer technology health education travel housing cost of living major change"
       section: "消费/生活"
       source: "消费生活补源 (Tavily)"
+      max_results: 5
+    - query: "site:skift.com OR site:npr.org/sections/health OR site:npr.org/sections/education OR site:cpsc.gov recall health education travel housing energy bills"
+      section: "消费/生活"
+      source: "生活场景补源 (Tavily)"
+      max_results: 5
   # 想盯的 X / 行业人物——Tavily 搜他们近期的相关报道与言论（不是原始推文）
   people:
     - "Sam Altman"
@@ -203,8 +265,15 @@ source_quality:
     - "federalreserve.gov"
     - "sec.gov"
     - "ecb.europa.eu"
+    - "bis.org"
+    - "eia.gov"
+    - "imf.org"
+    - "worldbank.org"
+    - "wto.org"
+    - "un.org"
     - "europa.eu"
     - "who.int"
+    - "cpsc.gov"
   high_confidence_domains:
     - "techmeme.com"
     - "theverge.com"
@@ -226,6 +295,8 @@ source_quality:
     - "ft.com"
     - "wsj.com"
     - "wired.com"
+    - "npr.org"
+    - "skift.com"
     - "nature.com"
     - "science.org"
     - "bbc.com"
@@ -237,6 +308,9 @@ source_quality:
     - "caixin.com"
     - "latepost.com"
     - "36kr.com"
+    - "jiemian.com"
+    - "yicai.com"
+    - "21jingji.com"
     - "tmtpost.com"
     - "qbitai.com"
     - "jiqizhixin.com"
@@ -273,16 +347,16 @@ digest:
       max_items: 2
     - label: "宏观/政策"
       note: "有重要变化才上"
-      max_items: 2
+      max_items: 3
     - label: "商业/科技"
       note: "优先选产业变化"
-      max_items: 2
+      max_items: 3
     - label: "国际/社会"
       note: "只选有长期影响的"
-      max_items: 1
+      max_items: 2
     - label: "消费/生活"
       note: "偶尔补充，更接地气"
-      max_items: 1
+      max_items: 2
 
 mail:
   smtp_host: "smtp.qq.com"
