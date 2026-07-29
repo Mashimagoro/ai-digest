@@ -14,6 +14,13 @@ def _chunks(items: list[dict], size: int):
         yield items[i : i + size]
 
 
+def _as_object(value) -> dict:
+    if isinstance(value, dict):
+        return value
+    print(f"  [AI] 返回 JSON 类型异常: {type(value).__name__}")
+    return {}
+
+
 def analyse(items: list[dict], cfg: dict) -> list[dict]:
     """逐批让 AI 打分+写中文摘要+主题标签。AI 不可用时降级为原样返回。"""
     ai_cfg = cfg.get("ai", {})
@@ -32,12 +39,12 @@ def analyse(items: list[dict], cfg: dict) -> list[dict]:
     out: list[dict] = []
     for idx, group in enumerate(batches, 1):
         print(f"  [AI] 第 {idx}/{len(batches)} 批…")
-        result = generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate)
+        result = _as_object(generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate))
         analyses = result.get("analyses", [])
         # 空返回或条数不足时重试一次（应对偶发 429/截断）
         if len(analyses) < len(group):
             print(f"  [AI] 第 {idx} 批返回不全（{len(analyses)}/{len(group)}），重试…")
-            retry = generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate).get("analyses", [])
+            retry = _as_object(generate(_prompt(group, priorities, cfg), model=model, rate_limit=rate)).get("analyses", [])
             if len(retry) > len(analyses):
                 analyses = retry
         for j, item in enumerate(group):
@@ -134,10 +141,10 @@ def dedupe_stories(items: list[dict], cfg: dict) -> list[dict]:
 不确定就不要分组；独立事件无需列出。"""
     model = cfg.get("ai", {}).get("model", "gemini-2.0-flash")
     rate = cfg.get("ai", {}).get("rate_limit_seconds", 7.0)
-    result = generate(prompt, model=model, rate_limit=rate)
+    result = _as_object(generate(prompt, model=model, rate_limit=rate))
     # 单次空返回（偶发 429/截断/解析失败）会让整轮去重失效，重试一次
     if "groups" not in result:
-        result = generate(prompt, model=model, rate_limit=rate)
+        result = _as_object(generate(prompt, model=model, rate_limit=rate))
 
     drop: set[int] = set()
     for group in result.get("groups", []) or []:

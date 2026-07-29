@@ -9,6 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from ai.quality import _merged_credibility, apply_quality_gate, classify_source
+from ai import digest as digest_mod
 from ai.digest import _first_sentence, build_markdown, dedupe_similar, overview, sectionize
 from deliver.site import _digest_body
 from main import _title_ok, passes_filters, source_filter
@@ -262,3 +263,22 @@ def test_site_digest_body_renders_signal_sections():
 
     assert "<h2>AI｜每天保留</h2>" in body
     assert "重点条目" not in body
+
+
+def test_analyse_treats_unexpected_list_response_as_empty(monkeypatch):
+    monkeypatch.setattr(digest_mod, "generate", lambda *args, **kwargs: [])
+
+    out = digest_mod.analyse(
+        [
+            {
+                "id": "item-1",
+                "title": "Unexpected Gemini response",
+                "url": "https://example.com/item",
+                "source": "Example",
+                "summary": "summary",
+            }
+        ],
+        {"ai": {"enabled": True, "batch_size": 1, "rate_limit_seconds": 0}},
+    )
+
+    assert out == []
