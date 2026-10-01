@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
@@ -80,6 +81,32 @@ def build_markdown(day: str, stats: dict | None, latest_day: str | None = None) 
 def main() -> int:
     load_dotenv()
     cfg = load_config()
+    alert = os.environ.get("DOOR_MONITOR_ALERT", "daily")
+    alerts = {
+        "fallback": (
+            "监控提醒：已切换本地录像",
+            "极空间录制未能继续，Mac mini 已启用本地录像。极空间恢复后会重新优先写入 NAS，"
+            "本地录像会经现有同步任务备份。",
+        ),
+        "restored": (
+            "监控提醒：极空间录像已恢复",
+            "Mac mini 已恢复优先写入极空间。故障期间的本地录像仍会由同步任务补传。",
+        ),
+        "local_low": (
+            "监控紧急提醒：本地空间不足",
+            "极空间录制不可用，Mac mini 本地剩余空间低于安全阈值。录像可能暂停，请检查设备。",
+        ),
+        "test": (
+            "监控提醒：邮件通道测试",
+            "监控故障邮件通道测试成功。",
+        ),
+    }
+    if alert in alerts:
+        subject, body = alerts[alert]
+        mailer.send(subject, body, cfg)
+        return 0
+    if alert != "daily":
+        raise ValueError(f"Unsupported door monitor alert: {alert}")
     day = target_date()
     stats, latest_day = load_stats(day)
     subject = f"门口监控备份 · {day}"

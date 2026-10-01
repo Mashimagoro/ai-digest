@@ -4,6 +4,18 @@ on:
   schedule:
     - cron: "0 17 * * *"   # 北京时间每天 01:00
   workflow_dispatch:
+    inputs:
+      alert:
+        description: "Recorder notification"
+        required: false
+        type: choice
+        default: daily
+        options:
+          - daily
+          - fallback
+          - restored
+          - local_low
+          - test
 
 jobs:
   door-monitor-email:
@@ -24,4 +36,5 @@ jobs:
           SMTP_USER: ${{ secrets.SMTP_USER }}
           SMTP_PASS: ${{ secrets.SMTP_PASS }}
           MAIL_TO: ${{ secrets.MAIL_TO }}
+          DOOR_MONITOR_ALERT: ${{ inputs.alert || 'daily' }}
         run: python door_monitor_email.py
