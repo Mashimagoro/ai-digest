@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>今日重要信号 · 2026-10-15</title>
+<style>
+:root{
+  --bg:#030712; --panel:rgba(8,15,30,.72); --panel-strong:rgba(9,16,31,.92);
+  --ink:#f8fbff; --muted:#a7b4c8; --soft:#d9f7ff;
+  --accent:#57e5ff; --signal:#22f2b5; --violet:#8fb2ff; --warm:#f5b84b;
+  --line:rgba(147,197,253,.22); --line-strong:rgba(103,232,249,.42);
+  --radius:18px; --shadow:0 22px 70px rgba(0,0,0,.45),0 0 44px rgba(34,211,238,.09);
+  --maxw:1120px;
+}
+*{box-sizing:border-box}
+body{margin:0;background:
+    radial-gradient(circle at 50% 0%,rgba(34,211,238,.22),transparent 28rem),
+    radial-gradient(circle at 12% 85%,rgba(45,212,191,.22),transparent 22rem),
+    radial-gradient(circle at 88% 88%,rgba(96,165,250,.22),transparent 24rem),
+    #020611;
+  color:var(--ink);
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",Segoe UI,sans-serif;
+  line-height:1.65;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
+  background:
+    linear-gradient(rgba(87,229,255,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(87,229,255,.04) 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.65) 42%,transparent)}
+.stage{max-width:1180px;margin:28px auto 0;border:1px solid rgba(186,230,253,.22);
+  border-radius:32px;overflow:hidden;background:linear-gradient(180deg,rgba(5,10,23,.94),rgba(3,7,18,.76));
+  box-shadow:0 42px 120px rgba(0,0,0,.58),0 0 0 1px rgba(103,232,249,.08) inset}
+.site-head{position:relative;overflow:hidden;min-height:560px;padding:28px 24px 42px;text-align:center;
+  border-bottom:1px solid rgba(103,232,249,.18)}
+.site-head::before{content:"";position:absolute;inset:0;pointer-events:none;opacity:.55;
+  background:
+    linear-gradient(180deg,rgba(34,211,238,.12),transparent 42%),
+    repeating-linear-gradient(90deg,transparent 0 28px,rgba(34,211,238,.08) 28px 29px),
+    repeating-linear-gradient(0deg,transparent 0 28px,rgba(96,165,250,.055) 28px 29px);
+  mask-image:linear-gradient(180deg,#000,rgba(0,0,0,.85),transparent)}
+.site-head::after{content:"";position:absolute;left:50%;top:-90px;width:360px;height:570px;transform:translateX(-50%);
+  pointer-events:none;background:
+    linear-gradient(180deg,rgba(87,229,255,.02),rgba(87,229,255,.56) 45%,rgba(34,242,181,.16) 68%,transparent),
+    repeating-linear-gradient(90deg,transparent 0 18px,rgba(190,242,255,.44) 18px 20px,transparent 20px 32px);
+  filter:blur(.2px);opacity:.86;clip-path:polygon(40% 0,60% 0,100% 78%,50% 100%,0 78%)}
+.beam{position:absolute;left:50%;top:155px;width:min(760px,76vw);height:260px;transform:translateX(-50%);
+  pointer-events:none;border-radius:50%;
+  background:radial-gradient(ellipse at center,rgba(87,229,255,.52),rgba(37,99,235,.16) 42%,transparent 70%);
+  filter:blur(22px);opacity:.72}
+.nav-pill{position:relative;z-index:2;display:inline-flex;align-items:center;gap:8px;padding:8px;
+  border:1px solid rgba(226,246,255,.22);border-radius:16px;background:rgba(12,20,35,.66);
+  box-shadow:0 8px 36px rgba(0,0,0,.35),0 0 24px rgba(34,211,238,.12) inset;backdrop-filter:blur(18px)}
+.nav-pill span,.nav-pill a{display:inline-flex;align-items:center;min-height:28px;padding:4px 12px;border-radius:10px;
+  color:#d7eaff;font-size:.74rem;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.035);
+  text-decoration:none;transition:color .15s,border-color .15s}
+.nav-pill a:hover{color:var(--accent);border-color:var(--line-strong)}
+.nav-pill .nav-mark{font-weight:900;color:#061018;background:linear-gradient(135deg,var(--accent),var(--signal));
+  box-shadow:0 0 18px rgba(34,242,181,.3)}
+.eyebrow{position:relative;z-index:2;margin:86px 0 6px;color:var(--accent);font-size:.78rem;
+  text-transform:uppercase;letter-spacing:.16em;font-weight:800}
+.hero-title{position:relative;z-index:2;margin:0;font-size:5.8rem;line-height:1.02;
+  letter-spacing:0;font-weight:950;color:#fff;text-shadow:0 0 28px rgba(87,229,255,.28),0 8px 32px rgba(0,0,0,.8)}
+.hero-subtitle{position:relative;z-index:2;max-width:620px;margin:24px auto 0;color:#d8ebff;font-size:.92rem;
+  text-shadow:0 0 16px rgba(87,229,255,.28)}
+.hero-panel{position:absolute;z-index:2;width:170px;padding:14px;border:1px solid rgba(186,230,253,.18);
+  border-radius:16px;background:rgba(6,13,28,.48);box-shadow:0 14px 38px rgba(0,0,0,.36),0 0 34px rgba(34,211,238,.1) inset;
+  backdrop-filter:blur(16px);text-align:left;color:var(--muted)}
+.hero-panel span{display:block;margin-bottom:14px;color:#dff7ff;font-size:.76rem}
+.hero-panel p{margin:7px 0;color:#d8e6f7;font-size:.7rem;line-height:1.45}
+.hero-panel .filt{display:block;width:100%;margin:7px 0;padding:6px 8px;border-radius:8px;
+  border:1px solid rgba(186,230,253,.16);color:#d8e6f7;font-size:.68rem;font-weight:600;
+  background:rgba(255,255,255,.035);text-align:left;cursor:pointer;font-family:inherit;
+  transition:border-color .15s,background .15s,color .15s}
+.hero-panel .filt:hover{border-color:var(--line-strong);color:#fff}
+.hero-panel .filt.active{border-color:var(--accent);color:#061018;
+  background:linear-gradient(135deg,var(--accent),var(--signal));font-weight:800}
+.hero-panel--left{left:7%;top:295px}
+.hero-panel--right{right:7%;top:350px}
+main{max-width:var(--maxw);margin:0 auto;padding:34px 26px 64px}
+.home{display:inline-block;color:var(--accent);text-decoration:none;font-size:.9rem;margin-bottom:8px}
+.home:hover{text-decoration:underline}
+.layout{display:grid;grid-template-columns:1fr 220px;gap:34px;align-items:start}
+@media(max-width:760px){.layout{grid-template-columns:1fr}}
+h2{font-size:1.02rem;font-weight:850;color:#e7fbff;margin:1.8em 0 .8em;
+  text-transform:uppercase;letter-spacing:.08em}
+section:first-child h2{margin-top:0}
+.overview{background:linear-gradient(135deg,rgba(12,25,48,.84),rgba(14,36,56,.62));border:1px solid rgba(103,232,249,.36);
+  border-radius:var(--radius);padding:10px 24px 18px;box-shadow:0 0 45px rgba(34,211,238,.09),inset 3px 0 0 var(--accent)}
+.overview--muted{background:rgba(12,20,35,.72);border-color:var(--line)}
+.overview h2{color:var(--accent)}
+.overview ul{margin:0;padding-left:18px}
+.overview li{margin:6px 0;font-weight:600}
+.overview p{margin:0;color:var(--muted)}
+.card{position:relative;background:linear-gradient(135deg,rgba(11,20,38,.88),rgba(8,14,28,.72));border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:16px 18px;margin:12px 0;box-shadow:var(--shadow);backdrop-filter:blur(12px);
+  transition:transform .15s ease,box-shadow .15s ease,border-color .15s ease}
+.card::before{content:"";position:absolute;left:-1px;top:14px;bottom:14px;width:3px;border-radius:3px;background:var(--signal);opacity:.68}
+.card:hover{transform:translateY(-2px);border-color:var(--line-strong);box-shadow:0 18px 52px rgba(0,0,0,.42),0 0 36px rgba(34,211,238,.12)}
+.card--compact{padding:11px 16px;box-shadow:none}
+.card--compact::before{top:12px;bottom:12px;background:#a5b4fc;opacity:.55}
+.card--compact .summary{font-size:.9rem;color:var(--muted)}
+.card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:7px}
+.meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:7px}
+.card-head .meta{margin-bottom:0}
+.badge{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-weight:850;font-size:.78rem;
+  padding:1px 9px;border-radius:999px;color:#fff;min-width:30px;text-align:center}
+.s-high{background:var(--accent)}.s-mid{background:var(--signal)}.s-ok{background:var(--warm)}.s-low{background:#8f969d}
+.chip{font-size:.74rem;padding:1px 9px;border-radius:999px;border:1px solid rgba(186,230,253,.18);color:#b7c7d9;background:rgba(255,255,255,.045)}
+.chip--topic{background:rgba(96,165,250,.12);color:#d7e9ff}
+.chip--quality{background:rgba(34,242,181,.11);color:#bfffee;border-color:rgba(34,242,181,.26)}
+.chip--domain{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.title{font-size:1.06rem;font-weight:760;margin:.1em 0 .35em;line-height:1.4}
+.card--compact .title{font-size:.96rem;margin-bottom:.2em}
+.title a{color:#f7fbff;text-decoration:none;background-image:linear-gradient(var(--accent),var(--accent));
+  background-size:0 2px;background-repeat:no-repeat;background-position:0 100%;transition:background-size .2s}
+.title a:hover{background-size:100% 2px;color:var(--accent)}
+.summary{margin:0;color:#c7d4e6}
+.reason,.qa{margin:.45em 0 0;color:var(--muted);font-size:.88rem}
+.reason strong,.qa strong{color:#e5f7ff}
+.qa{border-left:3px solid var(--warm);padding-left:10px;background:rgba(245,184,75,.08)}
+.topic-h{font-size:.82rem;font-weight:700;color:var(--muted);margin:1.4em 0 .2em;
+  text-transform:uppercase;letter-spacing:.08em}
+.history{position:sticky;top:20px;background:rgba(9,16,31,.68);border:1px solid var(--line);
+  border-radius:var(--radius);padding:6px 18px 14px;backdrop-filter:blur(12px)}
+.history h2{font-size:.82rem;color:#e7fbff;text-transform:uppercase;letter-spacing:.06em}
+.history ol{list-style:none;margin:0;padding:0}
+.history li{margin:4px 0}
+.history a{color:#c8d7eb;text-decoration:none;font-size:.9rem;font-variant-numeric:tabular-nums;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace}
+.history a:hover{color:var(--accent)}
+.site-foot{max-width:var(--maxw);margin:0 auto;padding:24px;color:var(--muted);
+  font-size:.8rem}
+@media(max-width:900px){
+  .stage{margin:0;border-radius:0;border-left:0;border-right:0}
+  .site-head{min-height:430px}
+  .hero-panel{display:none}
+  .eyebrow{margin-top:62px}
+  .hero-title{font-size:3.4rem}
+}
+@media(max-width:520px){
+  .nav-pill{max-width:100%;overflow:auto;scrollbar-width:none}
+  .nav-pill::-webkit-scrollbar{display:none}
+  .nav-pill span{white-space:nowrap}
+  .site-head{min-height:380px;padding:22px 16px 30px}
+  .hero-title{font-size:2.7rem}
+  .hero-subtitle{font-size:.82rem}
+  main{padding:22px 16px 52px}
+  .card{padding:14px}
+  .card-head{display:block}
+  .badge{display:inline-block;margin-top:7px}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <header class="site-head">
+    <div class="nav-pill">
+      <a class="nav-mark" href="#top">信号</a>
+      <a href="#top">本期</a>
+      <a href="#sections">板块</a>
+      <a href="#history">历史</a>
+    </div>
+    <div class="hero-panel hero-panel--left" id="sections">
+      <span>固定板块</span>
+      <p>AI 每天保留</p>
+      <p>宏观/政策 有变化才上</p>
+      <p>商业/科技 看产业变化</p>
+    </div>
+    <div class="hero-panel hero-panel--right">
+      <span>入选原则</span>
+      <p>官方与高质量媒体优先</p>
+      <p>不硬凑板块</p>
+      <p>每条只保留一句影响</p>
+    </div>
+    <div class="beam" aria-hidden="true"></div>
+    <p class="eyebrow">AI-curated Daily Brief</p>
+    <h1 class="hero-title">今日重要信号</h1>
+    <p class="hero-subtitle">今日重要信号 · 2026-10-15 · AI 筛选整理 · 高质量信源优先</p>
+  </header>
+  <main id="top">
+    <a class="home" href="../index.html">← 返回首页</a>
+    <div class="layout">
+      <div class="content"><section class="overview"><h2>今日判断</h2><ul><li>MemSilicon成功流片国际首款高密度大容量1T4R 1Gb RRAM芯片。</li><li>研究人员利用AI设计出能切割其他蛋白质的酶，可分解数百年稳定的化学键。</li><li>谷歌DeepMind产品主管称Gemini 4 Argon为功能强大的主力模型。</li></ul></section>
+<section><h2>AI｜每天保留</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">量子位</span>
+      <span class="chip chip--topic">AI</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.qbitai.com/2026/10/503198.html" target="_blank" rel="noopener">MemSilicon完成国际首款高密度、大容量1T4R 1Gb RRAM芯片流片</a></h3>
+  <p class="summary">MemSilicon成功流片国际首款高密度大容量1T4R 1Gb RRAM芯片。</p>
+  <p class="reason"><strong>为什么重要：</strong>国际首款高密度RRAM芯片，AI算力硬件突破。</p>
+</article>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">Ars Technica AI</span>
+      <span class="chip chip--topic">AI</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://arstechnica.com/science/2026/10/researchers-use-ai-to-design-proteins-that-cut-up-other-proteins/" target="_blank" rel="noopener">Researchers use AI to design proteins that cut up other proteins</a></h3>
+  <p class="summary">研究人员利用AI设计出能切割其他蛋白质的酶，可分解数百年稳定的化学键。</p>
+  <p class="reason"><strong>为什么重要：</strong>AI在蛋白质设计领域取得重大突破，具深远科学和应用潜力。</p>
+</article>
+</section>
+<section><h2>宏观/政策｜有重要变化才上</h2>
+<article class="card" data-band="high" data-conf="official">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">国家统计局 数据发布</span>
+      <span class="chip chip--topic">宏观/政策</span>
+      <span class="chip chip--quality">官方/一手</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.stats.gov.cn/sj/zxfb/202610/t20261014_1965477.html" target="_blank" rel="noopener">2026年9月份居民消费价格同比上涨0.9%</a></h3>
+  <p class="summary">2026年9月全国居民消费价格同比上涨0.9%，环比上涨0.2%。</p>
+  <p class="reason"><strong>为什么重要：</strong>官方发布经济数据，影响市场预期和生活成本。</p>
+</article>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">宏观高可信媒体补源 (Tavily)</span>
+      <span class="chip chip--topic">宏观/政策</span>
+      <span class="chip chip--quality">高可信来源</span>
+      <span class="chip chip--domain">reuters.com</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.reuters.com/world/us/imfs-georgieva-says-us-growth-will-not-be-enough-shrink-debt-2026-10-14/" target="_blank" rel="noopener">IMF calls for US to cut deficits amid bond woes, urges China to shift away from exports - Reuters</a></h3>
+  <p class="summary">IMF呼吁美国采取税收或支出调整削减赤字，并建议中国转向国内消费主导增长。</p>
+  <p class="reason"><strong>为什么重要：</strong>高可信信源报道的国际组织对美中宏观政策的建议，影响深远。</p>
+</article>
+<article class="card" data-band="mid" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">BBC World</span>
+      <span class="chip chip--topic">宏观/政策</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.bbc.co.uk/news/articles/cwy8lx3pg4k2o?at_medium=RSS&amp;at_campaign=rss" target="_blank" rel="noopener">US inflation rises more than expected - here&#x27;s what is happening with prices</a></h3>
+  <p class="summary">受车用燃油成本推高影响，美国9月通胀率升至3.7%高于预期。</p>
+  <p class="reason"><strong>为什么重要：</strong>直接影响宏观市场预期与普通人生活成本，具备重要的政策与经济参考价值。</p>
+</article>
+</section>
+<section><h2>商业/科技｜优先选产业变化</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">中文商业科技补源 (Tavily)</span>
+      <span class="chip chip--topic">商业/科技</span>
+      <span class="chip chip--quality">高可信来源</span>
+      <span class="chip chip--domain">21jingji.com</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.21jingji.com/article/20261015/2ebab126f47f39aa36942f6e671ea73f.html" target="_blank" rel="noopener">A股再无东兴与信达：两家AMC系券商谢幕，券业整合驶入深水区 - 21经济网</a></h3>
+  <p class="summary">东兴证券与信达证券整合谢幕，标志着AMC系券商退出历史舞台，行业整合深入。</p>
+  <p class="reason"><strong>为什么重要：</strong>反映券业深度整合与AMC系券商格局变化，具有较高行业价值。</p>
+</article>
+<article class="card" data-band="mid" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">中文商业科技补源 (Tavily)</span>
+      <span class="chip chip--topic">商业/科技</span>
+      <span class="chip chip--quality">高可信来源</span>
+      <span class="chip chip--domain">21jingji.com</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.21jingji.com/article/20261014/herald/da50c8bfce5dd1ca4ce2032236f8830a.html" target="_blank" rel="noopener">“广州第一芯”上市首日市值超千亿，粤芯背后的国资新逻辑 - 21经济网</a></h3>
+  <p class="summary">广州国资加速并购重组，围绕产业链关键环节开展多起投资布局支撑产业升级。</p>
+  <p class="reason"><strong>为什么重要：</strong>剖析了地方国资通过资本运作赋能战略新兴产业的新逻辑。</p>
+</article>
+<article class="card" data-band="mid" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">TechCrunch</span>
+      <span class="chip chip--topic">商业/科技</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://techcrunch.com/2026/10/14/ambanis-jio-seeks-to-raise-3-2b-in-what-could-be-indias-biggest-ipo/" target="_blank" rel="noopener">Ambani’s Jio seeks to raise $3.2B in what could be India’s biggest IPO</a></h3>
+  <p class="summary">印度Jio公司计划通过IPO募资32亿美元，用于偿还债务并拓展电信以外业务。</p>
+  <p class="reason"><strong>为什么重要：</strong>印度大型IPO，影响市场预期和公司战略。</p>
+</article>
+</section>
+<section><h2>国际/社会｜只选有长期影响的</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">Ars Technica AI</span>
+      <span class="chip chip--topic">国际/社会</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://arstechnica.com/tech-policy/2026/10/fbi-arrests-openai-engineer-suspected-of-planting-bug-in-conference-room/" target="_blank" rel="noopener">Recording device hidden in toilet paper found in top-secret OpenAI meeting room</a></h3>
+  <p class="summary">OpenAI绝密会议室发现隐藏录音设备，一工程师面临外国间谍指控。</p>
+  <p class="reason"><strong>为什么重要：</strong>涉及AI巨头OpenAI的间谍案，影响公司安全及国际竞争。</p>
+</article>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">NYT World</span>
+      <span class="chip chip--topic">国际/社会</span>
+      <span class="chip chip--quality">高可信来源</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.nytimes.com/2026/10/14/world/europe/ukraine-starlink-energy.html" target="_blank" rel="noopener">Ukraine’s Exposure Grows as Satellite Use Is Restricted and Russia Escalates</a></h3>
+  <p class="summary">乌克兰基辅有60万人因大规模袭击停电，同时一项由五角大楼资助的卫星互联网项目似乎在无预警下受到限制。</p>
+  <p class="reason"><strong>为什么重要：</strong>乌克兰战事升级，卫星通信受限，影响军事与民生。</p>
+</article>
+</section>
+<section><h2>消费/生活｜偶尔补充，更接地气</h2>
+<article class="card" data-band="high" data-conf="verified">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">消费生活补源 (Tavily)</span>
+      <span class="chip chip--topic">消费/生活</span>
+      <span class="chip chip--quality">高可信来源</span>
+      <span class="chip chip--domain">npr.org</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.npr.org/2026/10/14/nx-s1-6000593/inflation-consumer-prices-cpi-social-security-benefits" target="_blank" rel="noopener">Inflation sizzled in September — and Social Security benefits will get a boost - NPR</a></h3>
+  <p class="summary">美国9月消费者价格同比上涨3.7%，社保署宣布明年将提高福利以抵御通胀。</p>
+  <p class="reason"><strong>为什么重要：</strong>主流权威信源发布重要通胀与社保调整数据，直接影响美国居民生活成本。</p>
+</article>
+<article class="card" data-band="mid" data-conf="pending">
+  <div class="card-head">
+    <div class="meta">
+      <span class="chip chip--src">消费生活补源 (Tavily)</span>
+      <span class="chip chip--topic">消费/生活</span>
+      <span class="chip chip--quality">普通来源</span>
+      <span class="chip chip--domain">cbsnews.com</span>
+    </div>
+  </div>
+  <h3 class="title"><a href="https://www.cbsnews.com/news/social-security-cola-2027-increase/" target="_blank" rel="noopener">Social Security sets its 2027 COLA increase at 3.6%. Here&#x27;s what that means for your benefits. - CBS News</a></h3>
+  <p class="summary">美国社保署宣布2027年COLA生活成本调整增加3.6%，超75万美国人受益。</p>
+  <p class="reason"><strong>为什么重要：</strong>事关数千万美国人的生活成本与实际消费能力，具有较高实用价值。</p>
+</article>
+</section></div>
+      <aside class="history" id="history"><h2>历史简报</h2><ol><li><a href="2026-10-15.html">2026-10-15</a></li><li><a href="2026-10-14.html">2026-10-14</a></li><li><a href="2026-10-13.html">2026-10-13</a></li><li><a href="2026-10-12.html">2026-10-12</a></li><li><a href="2026-10-11.html">2026-10-11</a></li><li><a href="2026-10-10.html">2026-10-10</a></li><li><a href="2026-10-09.html">2026-10-09</a></li><li><a href="2026-10-08.html">2026-10-08</a></li><li><a href="2026-10-07.html">2026-10-07</a></li><li><a href="2026-10-06.html">2026-10-06</a></li><li><a href="2026-10-05.html">2026-10-05</a></li><li><a href="2026-10-04.html">2026-10-04</a></li><li><a href="2026-10-03.html">2026-10-03</a></li><li><a href="2026-10-02.html">2026-10-02</a></li><li><a href="2026-10-01.html">2026-10-01</a></li><li><a href="2026-09-30.html">2026-09-30</a></li><li><a href="2026-09-29.html">2026-09-29</a></li><li><a href="2026-09-28.html">2026-09-28</a></li><li><a href="2026-09-27.html">2026-09-27</a></li><li><a href="2026-09-26.html">2026-09-26</a></li><li><a href="2026-09-25.html">2026-09-25</a></li><li><a href="2026-09-24.html">2026-09-24</a></li><li><a href="2026-09-23.html">2026-09-23</a></li><li><a href="2026-09-22.html">2026-09-22</a></li><li><a href="2026-09-21.html">2026-09-21</a></li><li><a href="2026-09-20.html">2026-09-20</a></li><li><a href="2026-09-19.html">2026-09-19</a></li><li><a href="2026-09-18.html">2026-09-18</a></li><li><a href="2026-09-16.html">2026-09-16</a></li><li><a href="2026-09-14.html">2026-09-14</a></li><li><a href="2026-09-13.html">2026-09-13</a></li><li><a href="2026-09-12.html">2026-09-12</a></li><li><a href="2026-09-11.html">2026-09-11</a></li><li><a href="2026-09-10.html">2026-09-10</a></li><li><a href="2026-09-09.html">2026-09-09</a></li><li><a href="2026-09-08.html">2026-09-08</a></li><li><a href="2026-09-07.html">2026-09-07</a></li><li><a href="2026-09-06.html">2026-09-06</a></li><li><a href="2026-09-05.html">2026-09-05</a></li><li><a href="2026-09-04.html">2026-09-04</a></li><li><a href="2026-09-03.html">2026-09-03</a></li><li><a href="2026-09-02.html">2026-09-02</a></li><li><a href="2026-09-01.html">2026-09-01</a></li><li><a href="2026-08-31.html">2026-08-31</a></li><li><a href="2026-08-30.html">2026-08-30</a></li><li><a href="2026-08-29.html">2026-08-29</a></li><li><a href="2026-08-28.html">2026-08-28</a></li><li><a href="2026-08-27.html">2026-08-27</a></li><li><a href="2026-08-26.html">2026-08-26</a></li><li><a href="2026-08-25.html">2026-08-25</a></li><li><a href="2026-08-24.html">2026-08-24</a></li><li><a href="2026-08-23.html">2026-08-23</a></li><li><a href="2026-08-22.html">2026-08-22</a></li><li><a href="2026-08-21.html">2026-08-21</a></li><li><a href="2026-08-20.html">2026-08-20</a></li><li><a href="2026-08-19.html">2026-08-19</a></li><li><a href="2026-08-18.html">2026-08-18</a></li><li><a href="2026-08-17.html">2026-08-17</a></li><li><a href="2026-08-16.html">2026-08-16</a></li><li><a href="2026-08-15.html">2026-08-15</a></li></ol></aside>
+    </div>
+  </main>
+</div>
+<footer class="site-foot">由「今日重要信号」自动生成 · 信源配置见仓库 config.yaml</footer>
+</body>
+</html>
