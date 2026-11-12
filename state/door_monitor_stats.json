@@ -525,7 +525,19 @@
       "stored": 142,
       "sync_state": "idle",
       "synced": 142
+    },
+    "2026-11-12": {
+      "date": "2026-11-12",
+      "deleted_local": 0,
+      "generated_at": "2026-11-13T00:30:38+08:00",
+      "last_synced_at": "2026-11-13T00:30:38+08:00",
+      "local_present": 3,
+      "remote_present": 139,
+      "remote_state": "available",
+      "stored": 139,
+      "sync_state": "idle",
+      "synced": 139
     }
   },
-  "updated_at": "2026-11-12T00:31:13+08:00"
+  "updated_at": "2026-11-13T00:30:38+08:00"
 }
