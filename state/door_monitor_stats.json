@@ -609,7 +609,19 @@
       "stored": 142,
       "sync_state": "unavailable",
       "synced": 142
+    },
+    "2026-11-19": {
+      "date": "2026-11-19",
+      "deleted_local": 0,
+      "generated_at": "2026-11-20T00:31:06+08:00",
+      "last_synced_at": "2026-11-20T00:31:06+08:00",
+      "local_present": 0,
+      "remote_present": 142,
+      "remote_state": "available",
+      "stored": 142,
+      "sync_state": "unavailable",
+      "synced": 142
     }
   },
-  "updated_at": "2026-11-19T00:30:28+08:00"
+  "updated_at": "2026-11-20T00:31:06+08:00"
 }
